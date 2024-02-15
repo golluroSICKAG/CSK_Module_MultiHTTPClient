@@ -1,4 +1,4 @@
-# CSK_Module_[MODULENAME]
+# CSK_Module_MultiHTTPClient
 ## INFO: Draft version. Not further developed / tested so far! Check for available GitHub forks of this repository to see latest updates.
 
 Module / Application to provide [...] functionality.
@@ -9,7 +9,7 @@ Module / Application to provide [...] functionality.
 ## How to Run
 
 [***...please fill with informations...***]  
-For further information check out the [documentation](https://raw.githack.com/SICKAppSpaceCodingStarterKit/CSK_Module_[MODULENAME]/main/docu/CSK_Module_[MODULENAME].html) in the folder "docu".
+For further information check out the [documentation](https://raw.githack.com/SICKAppSpaceCodingStarterKit/CSK_Module_MultiHTTPClient/main/docu/CSK_Module_MultiHTTPClient.html) in the folder "docu".
 
 ## Information
 
