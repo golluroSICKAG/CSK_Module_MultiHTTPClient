@@ -6,7 +6,10 @@ Module to provide HTTP/HTTPS client functionality on multiple instances to execu
 
 ## How to Run
 The app includes an intuitive GUI to setup the communication.  
-For further information check out the [documentation](https://raw.githack.com/SICKAppSpaceCodingStarterKit/CSK_Module_MultiHTTPClient/main/docu/CSK_Module_MultiHTTPClient.html) in the folder "docu".
+For further information check out the [documentation](https://raw.githack.com/SICKAppSpaceCodingStarterKit/CSK_Module_MultiHTTPClient/main/docu/CSK_Module_MultiHTTPClient.html) in the folder "docu".  
+
+**IMPORTANT**  
+If you want to make use of a domain name for an endpoint, please make sure that you use a valid DNS server on your system. E.g. you can make use of the [CSK_Module_DeviceNetworkConfig](https://github.com/SICKAppSpaceCodingStarterKit/CSK_Module_DeviceNetworkConfig) to configure one.  
 
 ## Information
 
