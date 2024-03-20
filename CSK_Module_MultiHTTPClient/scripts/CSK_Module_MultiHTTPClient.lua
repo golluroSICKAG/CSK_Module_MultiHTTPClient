@@ -31,7 +31,7 @@
 -- If app property "LuaLoadAllEngineAPI" is FALSE, use this to load and check for required APIs
 -- This can improve performance of garbage collection
 
--- _G.availableAPIs = require('Communication/MultiHTTPClient/helper/checkAPIs') -- can be used to adjust function scope of the module related on available APIs of the device
+_G.availableAPIs = require('Communication/MultiHTTPClient/helper/checkAPIs') -- can be used to adjust function scope of the module related on available APIs of the device
 -----------------------------------------------------------
 -- Logger
 _G.logger = Log.SharedLogger.create('ModuleLogger')
@@ -62,28 +62,26 @@ multiHTTPClientController.setMultiHTTPClient_Instances_Handle(multiHTTPClient_In
 
 --[[
 --- Function to show how this module could be used
-local function startProcessing()
+local function setup()
 
-  CSK_MultiHTTPClient.setSelectedInstance(1) --> select instance of module
-  CSK_MultiHTTPClient.doSomething() --> preparation
+  CSK_MultiHTTPClient.setRequestMode('POST')
+  CSK_MultiHTTPClient.setRequestEndpoint('http://192.168.0.1/api/crown/DateTime/setDateTime')
 
-  -- Option A --> prepare an event to trigger processing via this one
-  --Script.serveEvent("CSK_MultiHTTPClient.OnNewTestEvent", "MultiHTTPClient_OnNewTestEvent") --> Create event to listen to and process forwarded object
-  --CSK_MultiHTTPClient.setRegisterEvent('CSK_MultiHTTPClient.OnNewTestEvent') --> Register processing to the event
+  CSK_MultiHTTPClient.setRequestName('TestRequest')
+  CSK_MultiHTTPClient.setRequestRegisteredEvent('TestApp.OnNewTrigger') -- Needs to be served by another app...
+  CSK_MultiHTTPClient.setRequestBody('{"data":{"year": 1986,"month": 3,"day": 2,"hour": 10,"minute": 11,"second": 12}}')
+  CSK_MultiHTTPClient.addEditRequestViaUI()
+  CSK_MultiHTTPClient.setMaxQueueSize(10)
 
-  --Script.notifyEvent('OnNewTestEvent', data)
+  local function getResponse(response)
+    print(response)
+  end
 
-    -- Option B --> trigger processing via function call
-    local result = CSK_MultiHTTPClient.processSomething(data)
-
+  if Script.isServedAsEvent('CSK_MultiHTTPClient.OnNewResponse1_TestRequest') then
+    Script.register("CSK_MultiHTTPClient.OnNewResponse1_TestRequest", getResponse)
   end
 end
-
--- Call processing function after persistent data was loaded
---Script.register("CSK_MultiHTTPClient.OnDataLoadedOnReboot", startProcessing)
 ]]
-
---OR
 
 --- Function to react on startup event of the app
 local function main()
@@ -96,10 +94,10 @@ local function main()
   --       (see internal variable _G.multiHTTPClient_Model.parameterLoadOnReboot)
   --       If so, the app will trigger the "OnDataLoadedOnReboot" event if ready after loading parameters
   --
-  -- Can be used e.g. like this
   ----------------------------------------------------------------------------------------
 
-  --startProcessing() --> see above
+  --setup() --> just for docu, see above
+  CSK_MultiHTTPClient.setSelectedInstance(1)
   CSK_MultiHTTPClient.pageCalled() -- Update UI
 
 end

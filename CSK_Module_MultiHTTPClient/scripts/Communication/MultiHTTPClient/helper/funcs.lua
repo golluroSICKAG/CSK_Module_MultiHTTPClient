@@ -17,6 +17,36 @@ funcs.json = require('Communication/MultiHTTPClient/helper/Json')
 --**********************Start Function Scope *******************************
 --**************************************************************************
 
+--- Function to create a deep copy of a table
+---@param origTable auto[] Content to copy
+---@return auto[] res Clone of table
+local function copy(origTable)
+  if type(origTable) ~= 'table' then
+    return origTable
+  end
+
+  local s = {}
+  local res = setmetatable({}, getmetatable(origTable))
+  s[origTable] = res
+  for k, v in pairs(origTable) do
+    res[copy(k, s)] = copy(v, s)
+  end
+  return res
+end
+funcs.copy = copy
+
+--- Function to get size of table
+---@param content auto[] Content
+---@return int size Size of table
+local function getTableSize(content)
+  local count = 0
+  for _ in pairs(content) do
+    count = count + 1
+  end
+  return count
+end
+funcs.getTableSize = getTableSize
+
 --- Function to create a list with numbers
 ---@param size int Size of the list
 ---@return string list List of numbers
@@ -141,6 +171,82 @@ local function createStringListBySimpleTable(content)
   return list
 end
 funcs.createStringListBySimpleTable = createStringListBySimpleTable
+
+-- Function to create a string list for dropdown menu from list of strings
+local function createStringListFromList(list)
+  local stringList = "["
+  local first = true
+  for _, entity in ipairs(list) do
+    if not first then
+      stringList = stringList .. ", "
+    end
+    first = false
+    stringList = stringList .. '"' .. entity .. '"'
+  end
+  stringList = stringList .. "]"
+  return stringList
+end
+funcs.createStringListFromList = createStringListFromList
+
+local function addTabs(str, tab)
+  if tab > 0 then
+    for _=1, tab do
+      str = '\t' .. str
+    end
+  end
+  return str
+end
+local function min(arr)
+  if #arr == 0 then
+    return nil
+  end
+  table.sort(arr)
+  return arr[1]
+end
+
+local function jsonLine2Table(intiStr, startInd, tab, resStr)
+  if not intiStr then return '' end
+  if not startInd then startInd = 1 end
+  if not tab then tab = 0 end
+  if not resStr then resStr = '' end
+  local compArray = {}
+  local nextSqBrOp = string.find(intiStr, '%[', startInd)
+  if nextSqBrOp then table.insert(compArray, nextSqBrOp) end
+  local nextSqBrCl = string.find(intiStr, '%]', startInd)
+  if nextSqBrCl then table.insert(compArray, nextSqBrCl) end
+  local nextCuBrCl = string.find(intiStr, '}', startInd)
+  if nextCuBrCl then table.insert(compArray, nextCuBrCl) end
+  local nextCuBrOp = string.find(intiStr, '{', startInd)
+  if nextCuBrOp then table.insert(compArray, nextCuBrOp) end
+  local nextComma = string.find(intiStr, ',', startInd)
+  if nextComma then table.insert(compArray, nextComma) end
+  local minVal = min(compArray)
+  if minVal then
+    local currentSymbol = string.sub(intiStr, minVal, minVal)
+    local content = ''
+    if startInd < minVal then
+      content = string.sub(intiStr, startInd, minVal-1)
+    end
+    if minVal == nextCuBrOp or minVal == nextSqBrOp then
+      resStr = resStr .. addTabs(content .. currentSymbol .. '\n', tab)
+      tab = tab + 1
+
+    elseif minVal == nextCuBrCl or minVal == nextSqBrCl then
+      resStr = resStr .. addTabs(content, tab) .. '\n' 
+      tab = tab - 1
+      resStr = resStr .. addTabs(currentSymbol, tab)
+    elseif nextComma and minVal == nextComma then
+      if content == '' then
+        resStr = resStr.. currentSymbol .. '\n'
+      else
+        resStr = resStr .. addTabs(content .. currentSymbol .. '\n', tab)
+      end
+    end
+    resStr = jsonLine2Table(intiStr, minVal+1, tab, resStr)
+  end
+  return resStr
+end
+funcs.jsonLine2Table = jsonLine2Table
 
 return funcs
 

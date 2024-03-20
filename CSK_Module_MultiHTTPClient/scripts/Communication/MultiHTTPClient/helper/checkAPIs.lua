@@ -6,10 +6,14 @@
 local availableAPIs = {}
 
 local function loadAPIs()
-  CSK_ModuleName = require 'API.CSK_ModuleName'
+  CSK_MultiHTTPClient = require 'API.CSK_MultiHTTPClient'
 
+  Cipher = {}
+  Cipher.AES = require 'API.Cipher.AES'
   Container = require 'API.Container'
+  DateTime = require 'API.DateTime'
   Engine = require 'API.Engine'
+  File = require 'API.File'
   Log = require 'API.Log'
   Log.Handler = require 'API.Log.Handler'
   Log.SharedLogger = require 'API.Log.SharedLogger'
@@ -29,8 +33,13 @@ end
 
 local function loadSpecificAPIs()
   -- If you want to check for specific APIs/functions supported on the device the module is running, place relevant APIs here
-  -- e.g.:
-  -- NTPClient = require 'API.NTPClient'
+
+  HTTPClient = require 'API.HTTPClient'
+  HTTPClient.Request = require 'API.HTTPClient.Request'
+  HTTPClient.Response = require 'API.HTTPClient.Response'
+
+  Ethernet = require 'API.Ethernet'
+  Ethernet.Interface = require 'API.Ethernet.Interface'
 end
 
 availableAPIs.default = xpcall(loadAPIs, debug.traceback) -- TRUE if all default APIs were loaded correctly

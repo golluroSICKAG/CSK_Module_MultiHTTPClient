@@ -3,19 +3,39 @@
     <application name="CSK_Module_MultiHTTPClient">
         <crown name="CSK_Module_MultiHTTPClient">
             <desc>This is an automatically generated CROWN (description not necessary).</desc>
+            <serves/>
         </crown>
         <crown name="CSK_MultiHTTPClient">
             <trait>released</trait>
-            <desc>Please fill in information regarding: What is the idea of this module and its features? +
-How to use this module in general.... like: +
+            <desc>HTTP Client module with ability to create multiple instances running in parallel. Each instance can have multiple requests assigned to it. +
+This module provides a UI for all relevant features. +
 {empty} + 
 Typically the features of this module are used like this (check also main script of this module): +
 {empty} + 
-**1) Setup** +
-ToDo +
+**1) Setup the HTTP client configuration** +
+- Select the client via 'setSelectedInstance'.
+- Setup the HTTP client relevant configs like the ethernet interface to use and optional parameters for client authentication, proxy settings, hostname/peer verification etc. Check the related 'set...' functions. +
+- Activate the client via 'setClientActivated'. +
 {empty} + 
-**2) Something else....** +
-</desc>
+**2) Send HTTP requests** +
+- Configure a HTTP request by setting the mode/endpoint/port (see 'set...' functions) and optionally add header keys or request content (payload/body). +
+- To add a header key, first set the key name via 'setRequestHeaderKey', set a value for this header key via 'setRequestHeaderValue' and add this via 'addHeader' (it is possible to add multiple header keys) +
+- To add a payload to the request, set the content type via 'setRequestContentType' and set the payload via 'setRequestContent'. +
+- Now you can send the preconfigured request via 'sendRequestViaUI'. +
+{empty} + 
+**3) Save requests** +
+It is possible to prepare and save multiple requests per instance. There are some addtional options: +
+- Give a name for the request via 'setRequestName'. +
+- If you want to send the request periodically you can activate this via 'setRequestPeriodicState' and setting the cycle time via 'setRequestPeriod'. +
+- If you want to send the request via event trigger, you can register to an event by set it via 'setRequestRegisteredEvent'. +
+- Add this request via 'addRequest'. +
+- INFO: If the used event provides some 'string' content this can be forwarded as payload of the request. +
+- INFO: The triggered calls for prepared requests will be checked by internal queues. The maximum size of this queues can be set for each client instance via 'setMaxQueueSize'. +
+- It is possible to edit requests by selecting them with their name via 'setSelectedRequest', change the request parameter via its 'setRequest...'-functions and update it via 'updateRequest'. +
+- INFO: The request name can NOT be updated. Please delete the request and add a new one to do so. +
+{empty} + 
+**4) Receive response** +
+The module will dynamically create events to provide the incoming response of the executed requests. Please check the 'OnNewResponseNUM' / 'OnNewResponseNUM_NAME'-event documentation. +</desc>
             <serves>
                 <event name="OnNewStatusLoadParameterOnReboot">
                     <desc>Notify status if parameters should be loaded on app/device boot up.</desc>
@@ -33,21 +53,21 @@ ToDo +
                     <desc>Event to share processing parameters to the instances.</desc>
                     <param desc="Number of the instance to receive the parameter." multiplicity="1" name="objectNo" type="int"/>
                     <param desc="Name of the parameter." multiplicity="1" name="parameter" type="string"/>
-                    <param desc="Value of the parameter." multiplicity="1" name="value" type="auto"/>
-                    <param desc="If parameter is for specifici internal used object, its number." multiplicity="?" name="internalObjectNo" type="int"/>
+                    <param desc="Value of the parameter." multiplicity="?" name="value" type="auto"/>
+                    <param desc="Value2 of the parameter." multiplicity="?" name="value2" type="auto"/>
                 </event>
                 <event name="OnNewSelectedInstance">
-                    <desc>Notify if new instance is selected.</desc>
+                    <desc>Event to notfiy the currently selected instance.</desc>
                     <param desc="Selected instance." multiplicity="1" name="selectedObject" type="int"/>
                 </event>
                 <event name="OnDataLoadedOnReboot">
                     <desc>Event to call if module tried to load parameters and should be ready.</desc>
                 </event>
-                <event name="OnNewResultNUM">
-                    <desc>Example of dynamically created event to provide result of instance. +
-NUM will be replaced by the number of instance (e.g. "OnNewResult1"). +
+                <event name="OnNewResponseNUM_NAME">
+                    <desc>Example of dynamically created event to provide response of specific request of instance. +
+NUM will be replaced by the number of instance and NAME by the request name (e.g. "OnNewResponse1_getDateTime"). +
 INFO: Other modules can check via "Script.isServedAsEvent" if event of sepecific instance exists.</desc>
-                    <param desc="Result" multiplicity="1" name="result" type="bool"/>
+                    <param desc="Response of HTTP client request." multiplicity="1" name="reponse" type="string"/>
                 </event>
                 <event name="OnNewParameterName">
                     <desc>Notify name of persistent data parameter.</desc>
@@ -79,17 +99,149 @@ NUM will be replaced by the number of instance (e.g. "OnNewResult1"). +</desc>
                 </event>
                 <event name="OnNewValueToForwardNUM">
                     <desc>Example of dynamically created event to forward data from instance thread to Controller part of module, e.g. to forward values to UI. +
-NUM will be replaced by the number of instance (e.g. "OnNewResult1"). +</desc>
+NUM will be replaced by the number of instance (e.g. "OnNewValueToForward1"). +</desc>
                     <param desc="Eventname to use to forward value." multiplicity="1" name="eventname" type="string"/>
                     <param desc="Value to forward." multiplicity="1" name="value" type="auto"/>
                 </event>
-                <event name="OnNewResult">
-                    <desc>Generic event to notify results. E.g. to forward results from single instances.</desc>
-                    <param desc="Result" multiplicity="1" name="result" type="bool"/>
+                <event name="OnNewResponseNUM">
+                    <desc>Example of dynamically created event to notify response messages received by specific HTTP client instance.
+NUM will be replaced by the number of instance and NAME by the request name (e.g. "OnNewResponse1"). +
+INFO: Other modules can check via "Script.isServedAsEvent" if event of sepecific instance exists.</desc>
+                    <param desc="Response of HTTP client request." multiplicity="1" name="response" type="string"/>
+                </event>
+                <event name="OnNewStatusClientAuthentication">
+                    <desc>Event to notfiy the status if client authentication is enabled.</desc>
+                    <param desc="TRUE if enabled." multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewStatusClientActivated">
+                    <desc>Event to notfiy the status if client is activated.</desc>
+                    <param desc="TRUE if active." multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewRequestsTable">
+                    <desc>Event to notfiy the dynamic table content containing all added requests of selected instance.</desc>
+                    <param desc="Content of the table in JSON format." multiplicity="?" name="TableContent" type="string"/>
+                </event>
+                <event name="OnNewRequestEndpoint">
+                    <desc>Event to notfiy the endpoint of chosen request.</desc>
+                    <param desc="The endpoint URL." multiplicity="?" name="Endpoint" type="string"/>
+                </event>
+                <event name="OnNewRequestContent">
+                    <desc>Event to notfiy request payload.</desc>
+                    <param desc="Request payload." multiplicity="?" name="requestContent" type="string"/>
+                </event>
+                <event name="OnNewResponseMessage">
+                    <desc>Event to notfiy response messages to UI.</desc>
+                    <param desc="Message." multiplicity="?" name="ResponseMessage" type="string"/>
+                </event>
+                <event name="OnNewRequestMode">
+                    <desc>Event to notfiy the mode of the request.</desc>
+                    <param desc="Mode e.g. 'GET', 'POST', 'PUT', 'DELETE', ..." multiplicity="1" name="RequestMode" type="string"/>
+                </event>
+                <event name="OnNewRequestPort">
+                    <desc>Event to notfiy the port of current request.</desc>
+                    <param desc="Port number." multiplicity="1" name="Port" type="int"/>
+                </event>
+                <event name="OnNewStatusRequestContentDisabled">
+                    <desc>Event to notfiy if the selected request mode supports to send a request content.
+
+</desc>
+                    <param desc="Status" multiplicity="1" name="state" type="bool"/>
+                </event>
+                <event name="OnNewHostnameVerification">
+                    <desc>Event to notfiy status if hostname verification is enabled.</desc>
+                    <param desc="TRUE if enabled." multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewPeerVerification">
+                    <desc>Event to notfiy status if hostname verification is enabled.</desc>
+                    <param desc="TRUE if enabled." multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewRequestName">
+                    <desc>Event to notfiy the name identifier of the selected request.</desc>
+                    <param desc="Name of the request." multiplicity="1" name="RequestName" type="string"/>
+                </event>
+                <event name="OnNewInterfaceDropdown">
+                    <desc>Event to notfiy the list of available interfaces in dropdown.</desc>
+                    <param desc="List of available interfaces in JSON format." multiplicity="1" name="InterfaceDropdownContent" type="string"/>
+                </event>
+                <event name="OnNewInterface">
+                    <desc>Event to notfiy the selected ethernet interface of current client.</desc>
+                    <param desc="Selected interface." multiplicity="1" name="Interface" type="string"/>
+                </event>
+                <event name="OnNewProxyEnableStatus">
+                    <desc>Event to notfiy status if proxy is enabled.</desc>
+                    <param desc="TRUE if enabled." multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewProxyUsername">
+                    <desc>Event to notfiy the proxy username.</desc>
+                    <param desc="Proxy username." multiplicity="1" name="ProxyUsername" type="string"/>
+                </event>
+                <event name="OnNewProxyPassword">
+                    <desc>Event to notfiy the proxy password.</desc>
+                    <param desc="Password string." multiplicity="1" name="ProxyPassword" type="string"/>
+                </event>
+                <event name="OnNewProxyURL">
+                    <desc>Event to notfiy the proxy URL.</desc>
+                    <param desc="Proxy URL." multiplicity="1" name="ProxyURL" type="string"/>
+                </event>
+                <event name="OnNewProxyPort">
+                    <desc>Event to notfiy proxy port.</desc>
+                    <param desc="Port number." multiplicity="1" name="ProxyPort" type="int"/>
+                </event>
+                <event name="OnNewRequestPeriodicStatus">
+                    <desc>Event to notfiy the status if the selected request is periodic.</desc>
+                    <param desc="TRUE if periodic." multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewRequestPeriod">
+                    <desc>Event to notfiy the period of the request if it is periodic.</desc>
+                    <param desc="Period in [ms]." multiplicity="1" name="RequestPeriod" type="int"/>
+                </event>
+                <event name="OnNewHeaderList">
+                    <desc>Notify current list of headers.</desc>
+                    <param desc="List of header keys." multiplicity="1" name="list" type="string"/>
+                </event>
+                <event name="OnNewSelectedHeader">
+                    <desc>Event to notfiy the selected header key.</desc>
+                    <param desc="Selected header key." multiplicity="1" name="headerKey" type="string"/>
+                </event>
+                <event name="OnNewHeaderKey">
+                    <desc>Notify currently selected header key.</desc>
+                    <param desc="Header key." multiplicity="1" name="key" type="string"/>
+                </event>
+                <event name="OnNewHeaderValue">
+                    <desc>Notify value of currently selected header key.</desc>
+                    <param desc="Value" multiplicity="1" name="value" type="string"/>
+                </event>
+                <event name="OnNewRequestContentType">
+                    <desc>Notify content type of request payload.</desc>
+                    <param desc="Content type." multiplicity="1" name="type" type="string"/>
+                </event>
+                <event name="OnNewStatusExtendedResponse">
+                    <desc>Event to notfiy the status if extended response is active.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewVerboseMode">
+                    <desc>Notify if verbose mode of HTTP client is active.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
                 </event>
                 <event name="OnNewStatusRegisteredEvent">
-                    <desc>Notify event instance is registered to receive data to process.</desc>
+                    <desc>Notify name of event the request is registered to receive trigger and optionally data to forward as payload.</desc>
                     <param desc="Name of event." multiplicity="1" name="eventname" type="string"/>
+                </event>
+                <event name="OnNewQueueSize">
+                    <desc>Notify maximum size of queues for requests.</desc>
+                    <param desc="Maximum size of queues to stop the trigger of new requests." multiplicity="1" name="size" type="int"/>
+                </event>
+                <event name="OnNewClientCertificateType">
+                    <desc>Notify type of client certificate.</desc>
+                    <param desc="Certificate type (PEM, DER, PKCS12)." multiplicity="1" name="type" type="string"/>
+                </event>
+                <event name="OnNewClientCertificateKeyType">
+                    <desc>Notify type of client certificate key.</desc>
+                    <param desc="Key type (PEM, DER)" multiplicity="1" name="type" type="string"/>
+                </event>
+                <event name="OnNewCookieStore">
+                    <desc>Notify filename to use for cookie store.</desc>
+                    <param desc="Name of file to store clients cookies." multiplicity="1" name="filename" type="string"/>
                 </event>
                 <function name="setParameterName">
                     <desc>Function to set the name of the parameters if saved/loaded via the CSK_PersistentData module.</desc>
@@ -102,7 +254,7 @@ NUM will be replaced by the number of instance (e.g. "OnNewResult1"). +</desc>
                     <desc>Load parameters for this module from the CSK_PersistentData module if possible and use them.</desc>
                 </function>
                 <function name="setLoadOnReboot">
-                    <desc>Configure if this module should load its saved parameters at app/ device boot up.</desc>
+                    <desc>Configure if this module should load its saved parameters at app / device boot up.</desc>
                     <param desc="Set status" multiplicity="1" name="status" type="bool"/>
                 </function>
                 <function name="pageCalled">
@@ -117,18 +269,10 @@ NUM will be replaced by the number of instance (e.g. "OnNewResult1"). +</desc>
                     <desc>Get the amount of created instances of this module.</desc>
                     <return desc="Amount of created instances." multiplicity="1" name="amount" type="int"/>
                 </function>
-                <function name="setRegisterEvent">
-                    <desc>Configure event that this module should listen to. If this one is notified, it will be linked to internal processing function. +
-(Will be set to currently active instance, see "setSelectedObject")</desc>
+                <function name="setRequestRegisteredEvent">
+                    <desc>Preconfigure event that this module should listen to. If this one is notified, it will be linked to internal processing function. +
+(Will be set to currently selected request via 'addRequest' or 'updateRequest').</desc>
                     <param desc="(external) Event name to listen to." multiplicity="1" name="event" type="string"/>
-                </function>
-                <function name="processInstanceNUM">
-                    <desc>Example of dynamically served function to process internally coded function. +
-NUM will be replaced by the number of instance (e.g. "processInstance1"). +
-INFO: Other modules can check via "Script.isServedAsFunction" if function of sepecific instance exists. +
-Needs then to be called via "Script.callFunction".</desc>
-                    <param alias="Alias" desc="Transferred object (optional)" multiplicity="?" name="object" type="object"/>
-                    <return desc="Processing result (optional)." multiplicity="?" name="result" type="bool"/>
                 </function>
                 <function name="addInstance">
                     <desc>Function to add an additional instance.</desc>
@@ -137,15 +281,172 @@ Needs then to be called via "Script.callFunction".</desc>
                     <desc>Function to reset instances to one single instance. +
 IMPORTANT: As instances start their own threads, the module needs to be restarted if new instances are needed... (see AppEngine docu for "Script.startScript").</desc>
                 </function>
+                <function name="setClientAuthentication">
+                    <desc>Function to enable client authentication.</desc>
+                    <param desc="True to enable." multiplicity="1" name="state" type="bool"/>
+                </function>
+                <function name="setClientActivated">
+                    <desc>Function to activate the HTTP client.</desc>
+                    <param desc="True to activate." multiplicity="1" name="state" type="bool"/>
+                </function>
+                <function name="addEditRequestViaUI">
+                    <desc>Function to add new or edit existing request (if successfully selected via 'setSelectedRequest') via UI by using preconfigured request parameters (see 'setRequest...'-functions).</desc>
+                </function>
+                <function name="removeRequest">
+                    <desc>Function to remove preselected request (see 'setSelectedRequest').</desc>
+                </function>
+                <function name="setRequestPort">
+                    <desc>Function to set port of request.</desc>
+                    <param desc="Port number." multiplicity="1" name="port" type="int"/>
+                </function>
+                <function name="setHostnameVerification">
+                    <desc>Function to enable hostname verification.</desc>
+                    <param desc="True to enable." multiplicity="1" name="state" type="bool"/>
+                </function>
+                <function name="setPeerVerification">
+                    <desc>Function to enable peer verification.</desc>
+                    <param desc="True to enable." multiplicity="1" name="state" type="bool"/>
+                </function>
+                <function name="setRequestMode">
+                    <desc>Function to set request mode.</desc>
+                    <param desc="Mode e.g. 'POST', 'GET', 'PUT', 'DELETE', ..." multiplicity="1" name="mode" type="string"/>
+                </function>
+                <function name="setRequestEndpoint">
+                    <desc>Function to set endpoint of currently selected request.</desc>
+                    <param desc="Endpoint URL." multiplicity="1" name="endpoint" type="string"/>
+                </function>
+                <function name="setRequestContent">
+                    <desc>Function to set body payload e.g. for POST or PUT requests.</desc>
+                    <param desc="Content string." multiplicity="1" name="content" type="string"/>
+                </function>
+                <function name="setSelectedRequestViaUI">
+                    <desc>Function to select request via UI.</desc>
+                    <param desc="Raw JSON data from dynamic table containing requests." multiplicity="1" name="jsonRowData" type="string"/>
+                </function>
+                <function name="setRequestName">
+                    <desc>Function to set identification name of request. +
+(Will be used to create a new request via 'addRequest'.</desc>
+                    <param desc="Request name." multiplicity="1" name="name" type="string"/>
+                </function>
+                <function name="setInterface">
+                    <desc>Function to set the ethernet interface for the HTTP client.</desc>
+                    <param desc="Ethernet enterface, e.g. 'ETH1'." multiplicity="1" name="interface" type="string"/>
+                </function>
+                <function name="setCABundleFile">
+                    <desc>Function called when uploading CA bundle file  for client authentication was finished.</desc>
+                    <param desc="Status if file upload was successful." multiplicity="1" name="success" type="bool"/>
+                </function>
+                <function name="setProxyEnabledStatus">
+                    <desc>Function to enable or disable proxy.</desc>
+                    <param desc="True to enable." multiplicity="1" name="state" type="bool"/>
+                </function>
+                <function name="setProxyURL">
+                    <desc>Function to set proxy URL.</desc>
+                    <param desc="Proxy URL." multiplicity="1" name="proxyURL" type="string"/>
+                </function>
+                <function name="setProxyPort">
+                    <desc>Function to set proxy port.</desc>
+                    <param desc="Proxy port number." multiplicity="1" name="proxyPort" type="int"/>
+                </function>
+                <function name="setProxyUsername">
+                    <desc>Function to set proxy username.</desc>
+                    <param desc="Proxy username." multiplicity="1" name="proxyUsername" type="string"/>
+                </function>
+                <function name="setProxyPassword">
+                    <desc>Function to set proxy password.</desc>
+                    <param desc="Password string." multiplicity="1" name="proxyPassword" type="string"/>
+                </function>
+                <function name="setRequestPeriodicState">
+                    <desc>Function to set if request should be triggered periodically (see 'setRequestPeriod'). +
+(Will be set to currently selected request via 'addRequest' or 'updateRequest').</desc>
+                    <param desc="'TRUE' to trigger periodically." multiplicity="1" name="state" type="bool"/>
+                </function>
+                <function name="setRequestPeriod">
+                    <desc>Function to set cycle time of the request if it is periodic (see 'setRequestPeriodicState'). +
+(Will be set to currently selected request via 'addRequest' or 'updateRequest').</desc>
+                    <param desc="Cycle time in [ms]." multiplicity="1" name="period" type="int"/>
+                </function>
+                <function name="updateRequest">
+                    <desc>Function to update request with preconfigured parameters (see 'setRequest...'-functions).</desc>
+                    <param desc="Name of request to edit." multiplicity="1" name="requestID" type="string"/>
+                </function>
+                <function name="addRequest">
+                    <desc>Function to add new request based on preconfigured parameters.</desc>
+                </function>
+                <function name="sendRequestViaUI">
+                    <desc>Function to trigger preconfigured request via UI.</desc>
+                </function>
+                <function name="setRequestHeaderKey">
+                    <desc>Function to preconfigure header key name (see 'addHeader').</desc>
+                    <param desc="Key name." multiplicity="1" name="key" type="string"/>
+                </function>
+                <function name="setRequestHeaderValue">
+                    <desc>Function to preconfigure header-key value (see 'addHeader').</desc>
+                    <param desc="Value" multiplicity="1" name="value" type="string"/>
+                </function>
+                <function name="addHeader">
+                    <desc>Function to add preconfigured header (see 'setHeaderKey' and 'setHeadervalue').</desc>
+                </function>
+                <function name="selectRequestHeaderKey">
+                    <desc>Function to select header key to edit.</desc>
+                    <param desc="Selection" multiplicity="1" name="selection" type="string"/>
+                </function>
+                <function name="deleteHeader">
+                    <desc>Function to delete preselected header key (see 'selectRequestHeaderKey').</desc>
+                </function>
+                <function name="setExtendedResponse">
+                    <desc>Function to set if response should include extended information (e.g. header infos).</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </function>
+                <function name="setRequestContentType">
+                    <desc>Function to set type of payload content (see 'setRequestContent').</desc>
+                    <param desc="Content mime-type specifier as described in RFC 2045/2046 (like 'application/json')." multiplicity="1" name="contentType" type="string"/>
+                </function>
+                <function name="setVerboseMode">
+                    <desc>Function to set if HTTP client should run in verbose mode.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </function>
+                <function name="setSelectedRequest">
+                    <desc>Function to select request by name.</desc>
+                    <param desc="Name of request." multiplicity="1" name="requestName" type="string"/>
+                </function>
+                <function name="setMaxQueueSize">
+                    <desc>Function to set maximum size of request queue to skip new requests.</desc>
+                    <param desc="Maximum size of queue (default is 5)." multiplicity="1" name="size" type="int"/>
+                </function>
+                <function name="setClientCertificateFile">
+                    <desc>Function called when uploading client certification file was finished.</desc>
+                    <param desc="Status" multiplicity="1" name="success" type="bool"/>
+                </function>
+                <function name="setClientCertificateKeyFile">
+                    <desc>Function called when uploading client certification key file was finished.</desc>
+                    <param desc="Status" multiplicity="1" name="success" type="bool"/>
+                </function>
+                <function name="setClientCertificateType">
+                    <desc>Function to set type of client cetification.</desc>
+                    <param desc="Type" multiplicity="1" name="certType" type="string"/>
+                </function>
+                <function name="setClientCertificateKeyType">
+                    <desc>Function to set type of client certification key.</desc>
+                    <param desc="Type" multiplicity="1" name="keyType" type="string"/>
+                </function>
+                <function name="setClientCertificateKeyPassphrase">
+                    <desc>Function to set optional passphrase for client certification key.</desc>
+                    <param desc="Passphrase" multiplicity="1" name="passphrase" type="string"/>
+                </function>
+                <function name="setCookieStore">
+                    <desc>Function to set filename for cookie storage.</desc>
+                    <param desc="Filename (like cookieStore.txt, will be placed at public/CSK_HTTPClient/)." multiplicity="1" name="filename" type="string"/>
+                </function>
             </serves>
         </crown>
         <meta key="author">SICK AG</meta>
-        <meta key="version">0.1.0</meta>
+        <meta key="version">1.0.0</meta>
         <meta key="priority">low</meta>
         <meta key="copy-protected">false</meta>
         <meta key="read-protected">false</meta>
         <meta key="crown2-flow-engine">false</meta>
-        <meta key="LuaLoadAllEngineAPI">true</meta>
+        <meta key="LuaLoadAllEngineAPI">false</meta>
         <entry default="CSK_Module_MultiHTTPClient.lua" path="scripts"/>
     </application>
 </manifest>
