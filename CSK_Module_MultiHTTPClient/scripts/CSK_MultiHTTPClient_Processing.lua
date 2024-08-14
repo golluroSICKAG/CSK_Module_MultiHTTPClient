@@ -122,7 +122,7 @@ local function updateClient()
   if processingParams.clientAuthentication then
     if File.exists(processingParams.caBundleFileName) then
       clientObject:setCABundle(processingParams.caBundleFileName)
-      _G.logger:info(nameOfModule .. ": CA_Bundle active.")
+      _G.logger:fine(nameOfModule .. ": CA_Bundle active.")
     else
       _G.logger:warning(nameOfModule .. ": No CA_Bundle file available.")
     end
@@ -133,7 +133,7 @@ local function updateClient()
       else
         clientObject:setClientCertificate(processingParams.clientCertificateFileName .. processingParams.clientCertificateType, processingParams.clientCertificateKeyFileName .. processingParams.clientCertificateKeyType)
       end
-      _G.logger:info(nameOfModule .. ": Client authentication active.")
+      _G.logger:fine(nameOfModule .. ": Client authentication active.")
     else
       _G.logger:warning(nameOfModule .. ": No client authentication files available.")
     end

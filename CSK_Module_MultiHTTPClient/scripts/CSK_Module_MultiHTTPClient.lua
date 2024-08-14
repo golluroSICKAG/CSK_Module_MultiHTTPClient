@@ -22,16 +22,13 @@
 
 ---@diagnostic disable: undefined-global, redundant-parameter, missing-parameter
 
--- 
--- CreationTemplateVersion: 3.6.0
 --**************************************************************************
 --**********************Start Global Scope *********************************
 --**************************************************************************
-
 -- If app property "LuaLoadAllEngineAPI" is FALSE, use this to load and check for required APIs
 -- This can improve performance of garbage collection
-
 _G.availableAPIs = require('Communication/MultiHTTPClient/helper/checkAPIs') -- can be used to adjust function scope of the module related on available APIs of the device
+
 -----------------------------------------------------------
 -- Logger
 _G.logger = Log.SharedLogger.create('ModuleLogger')
@@ -47,12 +44,19 @@ _G.logHandle:applyConfig()
 local multiHTTPClient_Model = require('Communication/MultiHTTPClient/MultiHTTPClient_Model')
 
 local multiHTTPClient_Instances = {} -- Handle all instances
-table.insert(multiHTTPClient_Instances, multiHTTPClient_Model.create(1)) -- Create at least 1 instance
 
 -- Load script to communicate with the MultiHTTPClient_Model UI
 -- Check / edit this script to see/edit functions which communicate with the UI
 local multiHTTPClientController = require('Communication/MultiHTTPClient/MultiHTTPClient_Controller')
-multiHTTPClientController.setMultiHTTPClient_Instances_Handle(multiHTTPClient_Instances) -- share handle of instances
+
+if _G.availableAPIs.default and _G.availableAPIs.specific then
+  local setInstanceHandle = require('Communication/MultiHTTPClient/FlowConfig/MultiHTTPClient_FlowConfig')
+  table.insert(multiHTTPClient_Instances, multiHTTPClient_Model.create(1)) -- Create at least 1 instance
+  multiHTTPClientController.setMultiHTTPClient_Instances_Handle(multiHTTPClient_Instances) -- share handle of instances
+  setInstanceHandle(multiHTTPClient_Instances)
+else
+  _G.logger:warning("CSK_MultiHTTPClient: Relevant CROWN(s) not available on device. Module is not supported...")
+end
 
 --**************************************************************************
 --**********************End Global Scope ***********************************
@@ -97,7 +101,9 @@ local function main()
   ----------------------------------------------------------------------------------------
 
   --setup() --> just for docu, see above
-  CSK_MultiHTTPClient.setSelectedInstance(1)
+  if _G.availableAPIs.default and _G.availableAPIs.specific then
+    CSK_MultiHTTPClient.setSelectedInstance(1)
+  end
   CSK_MultiHTTPClient.pageCalled() -- Update UI
 
 end
