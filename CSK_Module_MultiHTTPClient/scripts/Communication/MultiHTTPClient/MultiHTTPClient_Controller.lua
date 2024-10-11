@@ -135,6 +135,7 @@ local function createInterfaceList()
     return helperFuncs.createStringListFromList({'ETH1'})
   else
     local interfaceList = Ethernet.Interface.getInterfaces()
+    table.insert(interfaceList, 'Localhost')
     return helperFuncs.createStringListFromList(interfaceList)
   end
 end
@@ -272,7 +273,7 @@ end
 --- Function to send all relevant values to UI on resume
 local function handleOnExpiredTmrMultiHTTPClient()
 
-  Script.notifyEvent("MultiHTTPClient_OnNewStatusModuleVersion", multiHTTPClient_Model.version)
+  Script.notifyEvent("MultiHTTPClient_OnNewStatusModuleVersion", 'v' .. multiHTTPClient_Model.version)
   Script.notifyEvent("MultiHTTPClient_OnNewStatusCSKStyle", multiHTTPClient_Model.styleForUI)
   Script.notifyEvent("MultiHTTPClient_OnNewStatusModuleIsActive", _G.availableAPIs.default and _G.availableAPIs.specific)
 
@@ -857,7 +858,11 @@ end
 Script.serveFunction('CSK_MultiHTTPClient.setExtendedResponse', setExtendedResponse)
 
 local function getInstancesAmount ()
-  return #multiHTTPClient_Instances
+  if multiHTTPClient_Instances then
+    return #multiHTTPClient_Instances
+  else
+    return 0
+  end
 end
 Script.serveFunction("CSK_MultiHTTPClient.getInstancesAmount", getInstancesAmount)
 

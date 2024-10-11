@@ -505,7 +505,7 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                 <serves>
                     <function name="create">
                         <desc>Internally used CSK_FlowConfig create function.</desc>
-                        <param desc="Numeric identifier of processing instance (must be &gt;=1)." multiplicity="1" name="Instance" type="int"/>
+                        <param constraint="1-99" desc="Numeric identifier of processing instance." multiplicity="1" name="Instance" type="int"/>
                         <param desc="Name of request." multiplicity="1" name="RequestName" type="string"/>
                         <param desc="Mode of request." multiplicity="1" name="Mode" ref="CSK_MultiHTTPClient.RequestMode" type="enum"/>
                         <param desc="Endpoint for request WITHOUT leading 'http://'" multiplicity="1" name="Endpoint" type="string"/>
@@ -517,6 +517,7 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                         <desc>Set source of incoming data to forward via HTTP request.</desc>
                         <param desc="Handle to internally used FlowConfig instance." multiplicity="1" name="handle" type="handle"/>
                         <param desc="Source of data to forward via HTTP request.&#10;&#10;Parameter:&#10;1: Data (STRING)" multiplicity="1" name="source" type="string"/>
+                        <return desc="'CSK_MultiHTTPClient.OnNewResponse[NUM]_[NAME]'&#10;&#10;Parameter:&#10;1: Response (STRING)" multiplicity="1" name="OnNewResponse" type="string"/>
                     </function>
                 </serves>
             </crown>

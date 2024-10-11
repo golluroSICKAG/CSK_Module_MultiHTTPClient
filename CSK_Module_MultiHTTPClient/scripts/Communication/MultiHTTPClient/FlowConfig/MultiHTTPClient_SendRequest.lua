@@ -29,6 +29,8 @@ local function sendRequest(handle, source)
       break
     end
   end
+
+  return 'CSK_MultiHTTPClient.OnNewResponse' .. tostring(instance) .. '_' .. tostring(requestName)
 end
 Script.serveFunction(BLOCK_NAMESPACE .. '.sendRequest', sendRequest)
 

@@ -15,7 +15,7 @@ If you want to make use of a domain name for an endpoint, please make sure that 
 
 Tested on  
 
-|Device|Firmware|Module version
+|Device|Firmware|Module version|
 |--|--|--|
 |SICK AppEngine|V1.7.0|V2.0.0|
 |SIM1012|V2.4.2|V2.0.0|

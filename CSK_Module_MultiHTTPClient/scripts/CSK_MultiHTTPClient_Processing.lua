@@ -144,7 +144,9 @@ local function updateClient()
   end
   clientObject:setHostnameVerification(processingParams.hostnameVerification)
   clientObject:setPeerVerification(processingParams.peerVerification)
-  clientObject:setInterface(processingParams.interface)
+  if processingParams.interface ~= "Localhost" then
+    clientObject:setInterface(processingParams.interface)
+  end
   if processingParams.proxyEnabled then
     clientObject:setProxy(processingParams.proxyURL, processingParams.proxyPort)
     clientObject:setProxyAuth(processingParams.proxyUsername, Cipher.AES.decrypt(processingParams.proxyPassword, processingParams.key))
