@@ -36,6 +36,17 @@ It is possible to prepare and save multiple requests per instance. There are som
 {empty} + 
 **4) Receive response** +
 The module will dynamically create events to provide the incoming response of the executed requests. Please check the 'OnNewResponseNUM' / 'OnNewResponseNUM_NAME'-event documentation. +</desc>
+            <enum name="RequestMode" trait="released">
+                <desc>Mode of HTTP request.</desc>
+                <item name="GET">GET</item>
+                <item name="POST">POST</item>
+                <item name="HEAD">HEAD</item>
+                <item name="PUT">PUT</item>
+                <item name="PATCH">PATCH</item>
+                <item name="DELETE">DELETE</item>
+                <item name="TRACE">TRACE</item>
+                <item name="OPTIONS">OPTIONS</item>
+            </enum>
             <serves>
                 <event name="OnNewStatusLoadParameterOnReboot">
                     <desc>Notify status if parameters should be loaded on app/device boot up.</desc>
@@ -243,15 +254,29 @@ INFO: Other modules can check via "Script.isServedAsEvent" if event of sepecific
                     <desc>Notify filename to use for cookie store.</desc>
                     <param desc="Name of file to store clients cookies." multiplicity="1" name="filename" type="string"/>
                 </event>
+                <event name="OnNewStatusFlowConfigPriority">
+                    <desc>Notify if FlowConfig should have priority for FlowConfig relevant configurations.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewStatusCSKStyle">
+                    <desc>Notify UI style to use for CSK modules.</desc>
+                    <param desc="UI style" multiplicity="1" name="theme" type="string"/>
+                </event>
+                <event name="OnNewStatusModuleVersion">
+                    <desc>Notify version of module.</desc>
+                    <param desc="Version" multiplicity="1" name="version" type="string"/>
+                </event>
+                <event name="OnNewStatusModuleIsActive">
+                    <desc>Notify if module can be used on device.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </event>
                 <function name="setParameterName">
                     <desc>Function to set the name of the parameters if saved/loaded via the CSK_PersistentData module.</desc>
                     <param desc="Name of the parameter" multiplicity="1" name="name" type="string"/>
                 </function>
                 <function name="sendParameters">
                     <desc>Send parameters to CSK_PersistentData module if possible to save them.</desc>
-                </function>
-                <function name="loadParameters">
-                    <desc>Load parameters for this module from the CSK_PersistentData module if possible and use them.</desc>
+                    <param desc="[Optional] Set to TRUE if the data should NOT be saved immediately after sending." multiplicity="?" name="noDataSave" type="bool"/>
                 </function>
                 <function name="setLoadOnReboot">
                     <desc>Configure if this module should load its saved parameters at app / device boot up.</desc>
@@ -372,6 +397,13 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                 </function>
                 <function name="addRequest">
                     <desc>Function to add new request based on preconfigured parameters.</desc>
+                    <param desc="Name of request." multiplicity="1" name="name" type="string"/>
+                    <param desc="Mode of request." multiplicity="1" name="mode" ref="CSK_MultiHTTPClient.RequestMode" type="enum"/>
+                    <param desc="Endpoint of request." multiplicity="1" name="endpoint" type="string"/>
+                    <param desc="Port of request." multiplicity="1" name="port" type="int"/>
+                    <param desc="Name of event to get data to send via HTTP request.&#10;If not used, fill with ''." multiplicity="1" name="event" type="string"/>
+                    <param desc="Status of request is periodic." multiplicity="1" name="periodic" type="bool"/>
+                    <param desc="Optional time of request period in ms." multiplicity="?" name="period" type="int"/>
                 </function>
                 <function name="sendRequestViaUI">
                     <desc>Function to trigger preconfigured request via UI.</desc>
@@ -438,10 +470,60 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                     <desc>Function to set filename for cookie storage.</desc>
                     <param desc="Filename (like cookieStore.txt, will be placed at public/CSK_HTTPClient/)." multiplicity="1" name="filename" type="string"/>
                 </function>
+                <function name="clearFlowConfigRelevantConfiguration">
+                    <desc>Function to clear FlowConfig relevant configurations.</desc>
+                </function>
+                <function name="setFlowConfigPriority">
+                    <desc>Function to configure if FlowConfig should have priority for FlowConfig relevant configuration.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </function>
+                <function name="getStatusModuleActive">
+                    <desc>Function to get status if module is active.</desc>
+                    <return desc="Status" multiplicity="1" name="status" type="bool"/>
+                </function>
+                <function name="loadParameters">
+                    <desc>Load parameters for this module from the CSK_PersistentData module if possible and use them.</desc>
+                    <return desc="Success to load parameters." multiplicity="1" name="success" type="bool"/>
+                </function>
+                <function name="getParameters">
+                    <trait>released</trait>
+                    <desc>Function to get all parameters of the client in JSON format.</desc>
+                    <param desc="Number of instance to get parameters from." multiplicity="1" name="instanceNo" type="int"/>
+                    <return desc="JSON string with all parameters." multiplicity="1" name="jsonParameters" type="string"/>
+                </function>
+                <function name="resetModule">
+                    <desc>Function to reset main configuration of module.</desc>
+                </function>
             </serves>
         </crown>
+        <crown name="MultiHTTPClient_FC">
+            <trait>released</trait>
+            <desc>Crown to provide CSK_FlowConfig relevant features.</desc>
+            <serves/>
+            <crown name="SendRequest">
+                <desc>Forward data via HTTP request.</desc>
+                <serves>
+                    <function name="create">
+                        <desc>Internally used CSK_FlowConfig create function.</desc>
+                        <param constraint="1-99" desc="Numeric identifier of processing instance." multiplicity="1" name="Instance" type="int"/>
+                        <param desc="Name of request." multiplicity="1" name="RequestName" type="string"/>
+                        <param desc="Mode of request." multiplicity="1" name="Mode" ref="CSK_MultiHTTPClient.RequestMode" type="enum"/>
+                        <param desc="Endpoint for request WITHOUT leading 'http://'" multiplicity="1" name="Endpoint" type="string"/>
+                        <param desc="Port for request." multiplicity="1" name="Port" type="int"/>
+                        <return desc="Handle to internally used FlowConfig instance." multiplicity="1" name="handle" type="handle"/>
+                    </function>
+                    <function name="sendRequest">
+                        <include>data-flow</include>
+                        <desc>Set source of incoming data to forward via HTTP request.</desc>
+                        <param desc="Handle to internally used FlowConfig instance." multiplicity="1" name="handle" type="handle"/>
+                        <param desc="Source of data to forward via HTTP request.&#10;&#10;Parameter:&#10;1: Data (STRING)" multiplicity="1" name="source" type="string"/>
+                        <return desc="'CSK_MultiHTTPClient.OnNewResponse[NUM]_[NAME]'&#10;&#10;Parameter:&#10;1: Response (STRING)" multiplicity="1" name="OnNewResponse" type="string"/>
+                    </function>
+                </serves>
+            </crown>
+        </crown>
         <meta key="author">SICK AG</meta>
-        <meta key="version">1.0.0</meta>
+        <meta key="version">2.0.0</meta>
         <meta key="priority">low</meta>
         <meta key="copy-protected">false</meta>
         <meta key="read-protected">false</meta>

@@ -38,6 +38,9 @@ Script.serveEvent("CSK_MultiHTTPClient.OnNewValueUpdateNUM", "MultiHTTPClient_On
 
 -- Real events
 --------------------------------------------------
+Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusModuleVersion', 'MultiHTTPClient_OnNewStatusModuleVersion')
+Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusCSKStyle', 'MultiHTTPClient_OnNewStatusCSKStyle')
+Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusModuleIsActive', 'MultiHTTPClient_OnNewStatusModuleIsActive')
 Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusClientActivated', 'MultiHTTPClient_OnNewStatusClientActivated')
 Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusClientAuthentication', 'MultiHTTPClient_OnNewStatusClientAuthentication')
 
@@ -80,6 +83,7 @@ Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusExtendedResponse', 'MultiHTTPC
 Script.serveEvent("CSK_MultiHTTPClient.OnNewStatusLoadParameterOnReboot", "MultiHTTPClient_OnNewStatusLoadParameterOnReboot")
 Script.serveEvent("CSK_MultiHTTPClient.OnPersistentDataModuleAvailable", "MultiHTTPClient_OnPersistentDataModuleAvailable")
 Script.serveEvent("CSK_MultiHTTPClient.OnNewParameterName", "MultiHTTPClient_OnNewParameterName")
+Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusFlowConfigPriority', 'MultiHTTPClient_OnNewStatusFlowConfigPriority')
 
 Script.serveEvent("CSK_MultiHTTPClient.OnNewInstanceList", "MultiHTTPClient_OnNewInstanceList")
 Script.serveEvent("CSK_MultiHTTPClient.OnNewProcessingParameter", "MultiHTTPClient_OnNewProcessingParameter")
@@ -131,6 +135,7 @@ local function createInterfaceList()
     return helperFuncs.createStringListFromList({'ETH1'})
   else
     local interfaceList = Ethernet.Interface.getInterfaces()
+    table.insert(interfaceList, 'Localhost')
     return helperFuncs.createStringListFromList(interfaceList)
   end
 end
@@ -268,79 +273,93 @@ end
 --- Function to send all relevant values to UI on resume
 local function handleOnExpiredTmrMultiHTTPClient()
 
-  updateUserLevel()
+  Script.notifyEvent("MultiHTTPClient_OnNewStatusModuleVersion", 'v' .. multiHTTPClient_Model.version)
+  Script.notifyEvent("MultiHTTPClient_OnNewStatusCSKStyle", multiHTTPClient_Model.styleForUI)
+  Script.notifyEvent("MultiHTTPClient_OnNewStatusModuleIsActive", _G.availableAPIs.default and _G.availableAPIs.specific)
 
-  Script.notifyEvent("MultiHTTPClient_OnNewInstanceList", helperFuncs.createStringListBySize(#multiHTTPClient_Instances))
-  Script.notifyEvent('MultiHTTPClient_OnNewSelectedInstance', selectedInstance)
-  Script.notifyEvent('MultiHTTPClient_OnNewInterfaceDropdown', createInterfaceList())
-  Script.notifyEvent('MultiHTTPClient_OnNewInterface', multiHTTPClient_Instances[selectedInstance].parameters.interface)
+  if _G.availableAPIs.default and _G.availableAPIs.specific then
 
-  Script.notifyEvent('MultiHTTPClient_OnNewStatusClientActivated', multiHTTPClient_Instances[selectedInstance].parameters.clientActivated)
-  Script.notifyEvent('MultiHTTPClient_OnNewStatusClientAuthentication', multiHTTPClient_Instances[selectedInstance].parameters.clientAuthentication)
+    updateUserLevel()
 
-  Script.notifyEvent('MultiHTTPClient_OnNewClientCertificateType', multiHTTPClient_Instances[selectedInstance].parameters.clientCertificateType)
-  Script.notifyEvent('MultiHTTPClient_OnNewClientCertificateKeyType', multiHTTPClient_Instances[selectedInstance].parameters.clientCertificateKeyType)
-  Script.notifyEvent('MultiHTTPClient_OnNewCookieStore', multiHTTPClient_Instances[selectedInstance].parameters.cookieStore)
+    Script.notifyEvent("MultiHTTPClient_OnNewInstanceList", helperFuncs.createStringListBySize(#multiHTTPClient_Instances))
+    Script.notifyEvent('MultiHTTPClient_OnNewSelectedInstance', selectedInstance)
+    Script.notifyEvent('MultiHTTPClient_OnNewInterfaceDropdown', createInterfaceList())
+    Script.notifyEvent('MultiHTTPClient_OnNewInterface', multiHTTPClient_Instances[selectedInstance].parameters.interface)
 
-  Script.notifyEvent('MultiHTTPClient_OnNewProxyEnableStatus', multiHTTPClient_Instances[selectedInstance].parameters.proxyEnabled)
-  Script.notifyEvent('MultiHTTPClient_OnNewProxyUsername', multiHTTPClient_Instances[selectedInstance].parameters.proxyUsername)
-  Script.notifyEvent('MultiHTTPClient_OnNewProxyPassword', multiHTTPClient_Instances[selectedInstance].parameters.proxyPassword)
-  Script.notifyEvent('MultiHTTPClient_OnNewProxyURL', multiHTTPClient_Instances[selectedInstance].parameters.proxyURL)
-  Script.notifyEvent('MultiHTTPClient_OnNewProxyPort', multiHTTPClient_Instances[selectedInstance].parameters.proxyPort)
-  Script.notifyEvent('MultiHTTPClient_OnNewVerboseMode', multiHTTPClient_Instances[selectedInstance].parameters.verboseMode)
-  Script.notifyEvent('MultiHTTPClient_OnNewQueueSize', multiHTTPClient_Instances[selectedInstance].parameters.queueSize)
-  Script.notifyEvent('MultiHTTPClient_OnNewHostnameVerification', multiHTTPClient_Instances[selectedInstance].parameters.hostnameVerification)
-  Script.notifyEvent('MultiHTTPClient_OnNewPeerVerification', multiHTTPClient_Instances[selectedInstance].parameters.peerVerification)
+    Script.notifyEvent('MultiHTTPClient_OnNewStatusClientActivated', multiHTTPClient_Instances[selectedInstance].parameters.clientActivated)
+    Script.notifyEvent('MultiHTTPClient_OnNewStatusClientAuthentication', multiHTTPClient_Instances[selectedInstance].parameters.clientAuthentication)
 
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestEndpoint', multiHTTPClient_Instances[selectedInstance].requestEndpoint)
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestMode', multiHTTPClient_Instances[selectedInstance].requestMode)
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestPort', multiHTTPClient_Instances[selectedInstance].requestPort)
+    Script.notifyEvent('MultiHTTPClient_OnNewClientCertificateType', multiHTTPClient_Instances[selectedInstance].parameters.clientCertificateType)
+    Script.notifyEvent('MultiHTTPClient_OnNewClientCertificateKeyType', multiHTTPClient_Instances[selectedInstance].parameters.clientCertificateKeyType)
+    Script.notifyEvent('MultiHTTPClient_OnNewCookieStore', multiHTTPClient_Instances[selectedInstance].parameters.cookieStore)
 
-  Script.notifyEvent('MultiHTTPClient_OnNewHeaderList', helperFuncs.createJsonList(multiHTTPClient_Instances[selectedInstance].headers))
-  Script.notifyEvent('MultiHTTPClient_OnNewSelectedHeader', multiHTTPClient_Instances[selectedInstance].selectedHeaderKey)
-  if multiHTTPClient_Instances[selectedInstance].headers[multiHTTPClient_Instances[selectedInstance].selectedHeaderKey] then
-    Script.notifyEvent('MultiHTTPClient_OnNewHeaderKey', multiHTTPClient_Instances[selectedInstance].headerKey)
-    Script.notifyEvent('MultiHTTPClient_OnNewHeaderValue', multiHTTPClient_Instances[selectedInstance].headerValue)
-  else
-    Script.notifyEvent('MultiHTTPClient_OnNewHeaderKey', '')
-    Script.notifyEvent('MultiHTTPClient_OnNewHeaderValue', '')
+    Script.notifyEvent('MultiHTTPClient_OnNewProxyEnableStatus', multiHTTPClient_Instances[selectedInstance].parameters.proxyEnabled)
+    Script.notifyEvent('MultiHTTPClient_OnNewProxyUsername', multiHTTPClient_Instances[selectedInstance].parameters.proxyUsername)
+    Script.notifyEvent('MultiHTTPClient_OnNewProxyPassword', multiHTTPClient_Instances[selectedInstance].parameters.proxyPassword)
+    Script.notifyEvent('MultiHTTPClient_OnNewProxyURL', multiHTTPClient_Instances[selectedInstance].parameters.proxyURL)
+    Script.notifyEvent('MultiHTTPClient_OnNewProxyPort', multiHTTPClient_Instances[selectedInstance].parameters.proxyPort)
+    Script.notifyEvent('MultiHTTPClient_OnNewVerboseMode', multiHTTPClient_Instances[selectedInstance].parameters.verboseMode)
+    Script.notifyEvent('MultiHTTPClient_OnNewQueueSize', multiHTTPClient_Instances[selectedInstance].parameters.queueSize)
+    Script.notifyEvent('MultiHTTPClient_OnNewHostnameVerification', multiHTTPClient_Instances[selectedInstance].parameters.hostnameVerification)
+    Script.notifyEvent('MultiHTTPClient_OnNewPeerVerification', multiHTTPClient_Instances[selectedInstance].parameters.peerVerification)
+
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestEndpoint', multiHTTPClient_Instances[selectedInstance].requestEndpoint)
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestMode', multiHTTPClient_Instances[selectedInstance].requestMode)
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestPort', multiHTTPClient_Instances[selectedInstance].requestPort)
+
+    Script.notifyEvent('MultiHTTPClient_OnNewHeaderList', helperFuncs.createJsonList(multiHTTPClient_Instances[selectedInstance].headers))
+    Script.notifyEvent('MultiHTTPClient_OnNewSelectedHeader', multiHTTPClient_Instances[selectedInstance].selectedHeaderKey)
+    if multiHTTPClient_Instances[selectedInstance].headers[multiHTTPClient_Instances[selectedInstance].selectedHeaderKey] then
+      Script.notifyEvent('MultiHTTPClient_OnNewHeaderKey', multiHTTPClient_Instances[selectedInstance].headerKey)
+      Script.notifyEvent('MultiHTTPClient_OnNewHeaderValue', multiHTTPClient_Instances[selectedInstance].headerValue)
+    else
+      Script.notifyEvent('MultiHTTPClient_OnNewHeaderKey', '')
+      Script.notifyEvent('MultiHTTPClient_OnNewHeaderValue', '')
+    end
+
+    Script.notifyEvent('MultiHTTPClient_OnNewStatusRequestContentDisabled', multiHTTPClient_Instances[selectedInstance].requestMode == ('GET' or 'DELETE'))
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestContent', multiHTTPClient_Instances[selectedInstance].requestContent)
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestContentType', multiHTTPClient_Instances[selectedInstance].requestContentType)
+
+    Script.notifyEvent('MultiHTTPClient_OnNewStatusExtendedResponse', multiHTTPClient_Instances[selectedInstance].parameters.extendedResponse)
+    Script.notifyEvent('MultiHTTPClient_OnNewResponseMessage', '')
+
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestName', multiHTTPClient_Instances[selectedInstance].requestName)
+    Script.notifyEvent("MultiHTTPClient_OnNewStatusRegisteredEvent", multiHTTPClient_Instances[selectedInstance].registeredEvent)
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestPeriodicStatus', multiHTTPClient_Instances[selectedInstance].requestPeriodic)
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestPeriod', multiHTTPClient_Instances[selectedInstance].requestPeriod)
+    Script.notifyEvent('MultiHTTPClient_OnNewRequestsTable', getRequestsTableContent())
+
+    Script.notifyEvent("MultiHTTPClient_OnNewStatusLoadParameterOnReboot", multiHTTPClient_Instances[selectedInstance].parameterLoadOnReboot)
+    Script.notifyEvent("MultiHTTPClient_OnPersistentDataModuleAvailable", multiHTTPClient_Instances[selectedInstance].persistentModuleAvailable)
+    Script.notifyEvent("MultiHTTPClient_OnNewParameterName", multiHTTPClient_Instances[selectedInstance].parametersName)
+    Script.notifyEvent("MultiHTTPClient_OnNewStatusFlowConfigPriority", multiHTTPClient_Instances[selectedInstance].parameters.flowConfigPriority)
   end
-
-  Script.notifyEvent('MultiHTTPClient_OnNewStatusRequestContentDisabled', multiHTTPClient_Instances[selectedInstance].requestMode == ('GET' or 'DELETE'))
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestContent', multiHTTPClient_Instances[selectedInstance].requestContent)
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestContentType', multiHTTPClient_Instances[selectedInstance].requestContentType)
-
-  Script.notifyEvent('MultiHTTPClient_OnNewStatusExtendedResponse', multiHTTPClient_Instances[selectedInstance].parameters.extendedResponse)
-  Script.notifyEvent('MultiHTTPClient_OnNewResponseMessage', '')
-
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestName', multiHTTPClient_Instances[selectedInstance].requestName)
-  Script.notifyEvent("MultiHTTPClient_OnNewStatusRegisteredEvent", multiHTTPClient_Instances[selectedInstance].registeredEvent)
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestPeriodicStatus', multiHTTPClient_Instances[selectedInstance].requestPeriodic)
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestPeriod', multiHTTPClient_Instances[selectedInstance].requestPeriod)
-  Script.notifyEvent('MultiHTTPClient_OnNewRequestsTable', getRequestsTableContent())
-
-  Script.notifyEvent("MultiHTTPClient_OnNewStatusLoadParameterOnReboot", multiHTTPClient_Instances[selectedInstance].parameterLoadOnReboot)
-  Script.notifyEvent("MultiHTTPClient_OnPersistentDataModuleAvailable", multiHTTPClient_Instances[selectedInstance].persistentModuleAvailable)
-  Script.notifyEvent("MultiHTTPClient_OnNewParameterName", multiHTTPClient_Instances[selectedInstance].parametersName)
 end
 Timer.register(tmrMultiHTTPClient, "OnExpired", handleOnExpiredTmrMultiHTTPClient)
 
 -- ********************* UI Setting / Submit Functions Start ********************
 
 local function pageCalled()
-  updateUserLevel() -- try to hide user specific content asap
+  if _G.availableAPIs.default and _G.availableAPIs.specific then
+    updateUserLevel() -- try to hide user specific content asap
+  end
   tmrMultiHTTPClient:start()
   return ''
 end
 Script.serveFunction("CSK_MultiHTTPClient.pageCalled", pageCalled)
 
 local function setSelectedInstance(instance)
-  selectedInstance = instance
-  _G.logger:fine(nameOfModule .. ": New selected instance = " .. tostring(selectedInstance))
-  multiHTTPClient_Instances[selectedInstance].activeInUI = true
-  Script.notifyEvent('MultiHTTPClient_OnNewProcessingParameter', selectedInstance, 'activeInUI', true)
-  multiHTTPClient_Instances[selectedInstance].selectedRequest = nil
-  handleOnExpiredTmrMultiHTTPClient()
+  if #multiHTTPClient_Instances >= instance then
+    selectedInstance = instance
+    _G.logger:fine(nameOfModule .. ": New selected instance = " .. tostring(selectedInstance))
+    multiHTTPClient_Instances[selectedInstance].activeInUI = true
+    Script.notifyEvent('MultiHTTPClient_OnNewProcessingParameter', selectedInstance, 'activeInUI', true)
+    multiHTTPClient_Instances[selectedInstance].selectedRequest = nil
+    handleOnExpiredTmrMultiHTTPClient()
+  else
+    _G.logger:warning(nameOfModule .. ": Selected instance does not exist.")
+  end
 end
 Script.serveFunction("CSK_MultiHTTPClient.setSelectedInstance", setSelectedInstance)
 
@@ -720,12 +739,22 @@ local function createRequestParameters()
   return requestParameters
 end
 
-local function addRequest()
-  if multiHTTPClient_Instances[selectedInstance].requestName ~= '' then
-    if multiHTTPClient_Instances[selectedInstance].parameters.requests[multiHTTPClient_Instances[selectedInstance].requestName] then
+local function addRequest(name, mode, endpoint, port, event, periodic, period)
+
+  if name ~= '' then
+    if multiHTTPClient_Instances[selectedInstance].parameters.requests[name] then
       _G.logger:fine(nameOfModule .. ": Request with this name already exists.")
     else
       _G.logger:fine(nameOfModule .. ": Add request to instance" .. tostring(selectedInstance))
+
+      multiHTTPClient_Instances[selectedInstance].requestName = name
+      multiHTTPClient_Instances[selectedInstance].requestMode = mode
+      multiHTTPClient_Instances[selectedInstance].requestEndpoint = 'http://' .. endpoint
+      multiHTTPClient_Instances[selectedInstance].requestPort = port
+      multiHTTPClient_Instances[selectedInstance].registeredEvent = event or ''
+      multiHTTPClient_Instances[selectedInstance].requestPeriodic = periodic
+      multiHTTPClient_Instances[selectedInstance].requestPeriod = period or 0
+
       local requestToAdd = createRequestParameters()
       multiHTTPClient_Instances[selectedInstance].parameters.requests[multiHTTPClient_Instances[selectedInstance].requestName] = requestToAdd
 
@@ -761,7 +790,7 @@ local function addEditRequestViaUI()
       _G.logger:fine(nameOfModule .. ": Not possible to change request name. Delete request and create a new one.")
     end
   else
-    addRequest()
+    addRequest(multiHTTPClient_Instances[selectedInstance].requestName, multiHTTPClient_Instances[selectedInstance].requestMode, multiHTTPClient_Instances[selectedInstance].requestEndpoint, multiHTTPClient_Instances[selectedInstance].requestPort, multiHTTPClient_Instances[selectedInstance].registeredEvent, multiHTTPClient_Instances[selectedInstance].requestPeriodic, multiHTTPClient_Instances[selectedInstance].requestPeriod)
   end
   handleOnExpiredTmrMultiHTTPClient()
 end
@@ -829,7 +858,11 @@ end
 Script.serveFunction('CSK_MultiHTTPClient.setExtendedResponse', setExtendedResponse)
 
 local function getInstancesAmount ()
-  return #multiHTTPClient_Instances
+  if multiHTTPClient_Instances then
+    return #multiHTTPClient_Instances
+  else
+    return 0
+  end
 end
 Script.serveFunction("CSK_MultiHTTPClient.getInstancesAmount", getInstancesAmount)
 
@@ -859,6 +892,30 @@ local function resetInstances()
 end
 Script.serveFunction('CSK_MultiHTTPClient.resetInstances', resetInstances)
 
+local function getStatusModuleActive()
+  return _G.availableAPIs.default and _G.availableAPIs.specific
+end
+Script.serveFunction('CSK_MultiHTTPClient.getStatusModuleActive', getStatusModuleActive)
+
+local function clearFlowConfigRelevantConfiguration()
+  for i = 1, #multiHTTPClient_Instances do
+    for key, value in pairs(multiHTTPClient_Instances[i].parameters.requests) do
+      setSelectedRequest(key)
+      removeRequest()
+    end
+  end
+end
+Script.serveFunction('CSK_MultiHTTPClient.clearFlowConfigRelevantConfiguration', clearFlowConfigRelevantConfiguration)
+
+local function getParameters(instanceNo)
+  if instanceNo <= #multiHTTPClient_Instances then
+    return helperFuncs.json.encode(multiHTTPClient_Instances[instanceNo].parameters)
+  else
+    return ''
+  end
+end
+Script.serveFunction('CSK_MultiHTTPClient.getParameters', getParameters)
+
 -- *****************************************************************
 -- Following function can be adapted for CSK_PersistentData module usage
 -- *****************************************************************
@@ -869,7 +926,7 @@ local function setParameterName(name)
 end
 Script.serveFunction("CSK_MultiHTTPClient.setParameterName", setParameterName)
 
-local function sendParameters()
+local function sendParameters(noDataSave)
   if multiHTTPClient_Instances[selectedInstance].persistentModuleAvailable then
     CSK_PersistentData.addParameter(helperFuncs.convertTable2Container(multiHTTPClient_Instances[selectedInstance].parameters), multiHTTPClient_Instances[selectedInstance].parametersName)
 
@@ -880,7 +937,9 @@ local function sendParameters()
       CSK_PersistentData.setModuleParameterName(nameOfModule, multiHTTPClient_Instances[selectedInstance].parametersName, multiHTTPClient_Instances[selectedInstance].parameterLoadOnReboot, tostring(selectedInstance))
     end
     _G.logger:fine(nameOfModule .. ": Send MultiHTTPClient parameters with name '" .. multiHTTPClient_Instances[selectedInstance].parametersName .. "' to CSK_PersistentData module.")
-    CSK_PersistentData.saveData()
+    if not noDataSave then
+      CSK_PersistentData.saveData()
+    end
   else
     _G.logger:warning(nameOfModule .. ": CSK_PersistentData module not available.")
   end
@@ -891,71 +950,107 @@ local function loadParameters()
   if multiHTTPClient_Instances[selectedInstance].persistentModuleAvailable then
     local data = CSK_PersistentData.getParameter(multiHTTPClient_Instances[selectedInstance].parametersName)
     if data then
-      _G.logger:fine(nameOfModule .. ": Loaded parameters for multiHTTPClientObject " .. tostring(selectedInstance) .. " from CSK_PersistentData module.")
+      _G.logger:info(nameOfModule .. ": Loaded parameters for multiHTTPClientObject " .. tostring(selectedInstance) .. " from CSK_PersistentData module.")
       multiHTTPClient_Instances[selectedInstance].parameters = helperFuncs.convertContainer2Table(data)
 
       -- If something needs to be configured/activated with new loaded data
       Script.notifyEvent('MultiHTTPClient_OnNewProcessingParameter', selectedInstance, 'fullSetup', data)
       --announceExternalEventsAndFunctions() -- future usage
       CSK_MultiHTTPClient.pageCalled()
+      tmrMultiHTTPClient:start()
+      return true
     else
       _G.logger:warning(nameOfModule .. ": Loading parameters from CSK_PersistentData module did not work.")
+      tmrMultiHTTPClient:start()
+      return false
     end
   else
     _G.logger:warning(nameOfModule .. ": CSK_PersistentData module not available.")
+    tmrMultiHTTPClient:start()
+    return false
   end
-  tmrMultiHTTPClient:start()
 end
 Script.serveFunction("CSK_MultiHTTPClient.loadParameters", loadParameters)
 
 local function setLoadOnReboot(status)
   multiHTTPClient_Instances[selectedInstance].parameterLoadOnReboot = status
   _G.logger:fine(nameOfModule .. ": Set new status to load setting on reboot: " .. tostring(status))
+  Script.notifyEvent("MultiHTTPClient_OnNewStatusLoadParameterOnReboot", status)
 end
 Script.serveFunction("CSK_MultiHTTPClient.setLoadOnReboot", setLoadOnReboot)
+
+local function setFlowConfigPriority(status)
+  multiHTTPClient_Instances[selectedInstance].parameters.flowConfigPriority = status
+  _G.logger:fine(nameOfModule .. ": Set new status of FlowConfig priority: " .. tostring(status))
+  Script.notifyEvent("MultiHTTPClient_OnNewStatusFlowConfigPriority", multiHTTPClient_Instances[selectedInstance].parameters.flowConfigPriority)
+end
+Script.serveFunction('CSK_MultiHTTPClient.setFlowConfigPriority', setFlowConfigPriority)
 
 --- Function to react on initial load of persistent parameters
 local function handleOnInitialDataLoaded()
 
-  _G.logger:fine(nameOfModule .. ': Try to initially load parameter from CSK_PersistentData module.')
-  if string.sub(CSK_PersistentData.getVersion(), 1, 1) == '1' then
+  if _G.availableAPIs.default and _G.availableAPIs.specific then
 
-    _G.logger:warning(nameOfModule .. ': CSK_PersistentData module is too old and will not work. Please update CSK_PersistentData module.')
+    _G.logger:fine(nameOfModule .. ': Try to initially load parameter from CSK_PersistentData module.')
+    if string.sub(CSK_PersistentData.getVersion(), 1, 1) == '1' then
 
-    for j = 1, #multiHTTPClient_Instances do
-      multiHTTPClient_Instances[j].persistentModuleAvailable = false
-    end
-  else
-    -- Check if CSK_PersistentData version is >= 3.0.0
-    if tonumber(string.sub(CSK_PersistentData.getVersion(), 1, 1)) >= 3 then
-      local parameterName, loadOnReboot, totalInstances = CSK_PersistentData.getModuleParameterName(nameOfModule, '1')
-      -- Check for amount if instances to create
-      if totalInstances then
-        local c = 2
-        while c <= totalInstances do
-          addInstance()
-          c = c+1
+      _G.logger:warning(nameOfModule .. ': CSK_PersistentData module is too old and will not work. Please update CSK_PersistentData module.')
+
+      for j = 1, #multiHTTPClient_Instances do
+        multiHTTPClient_Instances[j].persistentModuleAvailable = false
+      end
+    else
+      -- Check if CSK_PersistentData version is >= 3.0.0
+      if tonumber(string.sub(CSK_PersistentData.getVersion(), 1, 1)) >= 3 then
+        local parameterName, loadOnReboot, totalInstances = CSK_PersistentData.getModuleParameterName(nameOfModule, '1')
+        -- Check for amount if instances to create
+        if totalInstances then
+          local c = 2
+          while c <= totalInstances do
+            addInstance()
+            c = c+1
+          end
         end
       end
-    end
 
-    for i = 1, #multiHTTPClient_Instances do
-      local parameterName, loadOnReboot = CSK_PersistentData.getModuleParameterName(nameOfModule, tostring(i))
-
-      if parameterName then
-        multiHTTPClient_Instances[i].parametersName = parameterName
-        multiHTTPClient_Instances[i].parameterLoadOnReboot = loadOnReboot
+      if not multiHTTPClient_Instances then
+        return
       end
 
-      if multiHTTPClient_Instances[i].parameterLoadOnReboot then
-        setSelectedInstance(i)
-        loadParameters()
+      for i = 1, #multiHTTPClient_Instances do
+        local parameterName, loadOnReboot = CSK_PersistentData.getModuleParameterName(nameOfModule, tostring(i))
+
+        if parameterName then
+          multiHTTPClient_Instances[i].parametersName = parameterName
+          multiHTTPClient_Instances[i].parameterLoadOnReboot = loadOnReboot
+        end
+
+        if multiHTTPClient_Instances[i].parameterLoadOnReboot then
+          setSelectedInstance(i)
+          loadParameters()
+        end
       end
+      Script.notifyEvent('MultiHTTPClient_OnDataLoadedOnReboot')
     end
-    Script.notifyEvent('MultiHTTPClient_OnDataLoadedOnReboot')
   end
 end
 Script.register("CSK_PersistentData.OnInitialDataLoaded", handleOnInitialDataLoaded)
+
+local function resetModule()
+  if _G.availableAPIs.default and _G.availableAPIs.specific then
+    clearFlowConfigRelevantConfiguration()
+    for i = 1, #multiHTTPClient_Instances do
+      setClientActivated(false)
+    end
+    pageCalled()
+  end
+end
+Script.serveFunction('CSK_MultiHTTPClient.resetModule', resetModule)
+Script.register("CSK_PersistentData.OnResetAllModules", resetModule)
+
+-- *************************************************
+-- END of functions for CSK_PersistentData module usage
+-- *************************************************
 
 return funcs
 

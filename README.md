@@ -13,10 +13,13 @@ If you want to make use of a domain name for an endpoint, please make sure that 
 
 ## Information
 
-Tested on:
-|Device|Firmware|Module version
+Tested on  
+
+|Device|Firmware|Module version|
 |--|--|--|
-|SIM 1012|V2.3.0|V1.0.0|
+|SICK AppEngine|V1.7.0|V2.0.0|
+|SIM1012|V2.4.2|V2.0.0|
+|SIM1012|V2.3.0|V1.0.0|
 
 This module is part of the SICK AppSpace Coding Starter Kit developing approach.  
 It is programmed in an object-oriented way. Some of the modules use kind of "classes" in Lua to make it possible to reuse code / classes in other projects.  

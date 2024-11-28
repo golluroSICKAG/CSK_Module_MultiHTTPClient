@@ -13,11 +13,21 @@ local nameOfModule = 'CSK_MultiHTTPClient'
 local multiHTTPClient = {}
 multiHTTPClient.__index = multiHTTPClient
 
+multiHTTPClient.styleForUI = 'None' -- Optional parameter to set UI style
+multiHTTPClient.version = Engine.getCurrentAppVersion() -- Version of module
+
 --**************************************************************************
 --********************** End Global Scope **********************************
 --**************************************************************************
 --**********************Start Function Scope *******************************
 --**************************************************************************
+
+--- Function to react on UI style change
+local function handleOnStyleChanged(theme)
+  multiHTTPClient.styleForUI = theme
+  Script.notifyEvent("MultiHTTPClient_OnNewStatusCSKStyle", multiHTTPClient.styleForUI)
+end
+Script.register('CSK_PersistentData.OnNewStatusCSKStyle', handleOnStyleChanged)
 
 --- Function to create new instance
 ---@param multiHTTPClientInstanceNo int Number of instance
@@ -49,7 +59,7 @@ function multiHTTPClient.create(multiHTTPClientInstanceNo)
   self.requestMode = 'POST' -- Request mode like 'PUT', 'POST', 'GET', ...
   self.requestEndpoint = 'http://192.168.0.10/api/crown/DateTime/getDateTime' -- Endpoint of request
   self.requestPort = 80 -- Port for request
-  self.requestName = '' -- Name of request to use
+  self.requestName = 'NameOfRequest' -- Name of request to use
   self.requestContent = '' -- Content payload of request
   self.requestContentType = 'application/json' -- Type of payload content
   self.requestPeriodic = false -- Status if request should be triggered periodically
@@ -67,6 +77,7 @@ function multiHTTPClient.create(multiHTTPClientInstanceNo)
 
   -- Parameters to be saved permanently if wanted
   self.parameters = {}
+  self.parameters.flowConfigPriority = CSK_FlowConfig ~= nil or false -- Status if FlowConfig should have priority for FlowConfig relevant configurations
   self.parameters.processingFile = 'CSK_MultiHTTPClient_Processing' -- which file to use for processing (will be started in own thread)
   self.parameters.clientActivated = false -- Set if HTTP client should be active
   self.parameters.proxyEnabled = false -- Status if proxy is enabled

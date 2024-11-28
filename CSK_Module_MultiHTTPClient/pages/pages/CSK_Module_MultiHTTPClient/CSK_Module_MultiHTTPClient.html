@@ -1,952 +1,1406 @@
-<layout-row id="RowLayout1">
-	<layout-column id="ColumnLayout1" style="align-items: stretch">
-		<davinci-value-display id="VD_ModuleName" label="HTTPClient">
-		</davinci-value-display>
-		<stacked-view id="SV_UserRole">
-			<stacked-pane id="SP_LoginOK" value="true">
-				<layout-row id="RowLayout16">
-					<layout-column id="ColumnLayout11" style="align-items: stretch">
-						<davinci-tabs id="Tabs_Setup" type="modern">
-							<davinci-tab id="Tab_Settings" label="Setup">
-								<layout-row id="RowLayout38">
-									<layout-column id="ColumnLayout29" style="align-items: stretch">
-										<layout-row id="RowLayout11" style="justify-content: space-between">
-											<layout-column id="ColumnLayout2" style="align-items: stretch">
-												<layout-row id="RowLayout15" style="align-items: center">
-												<layout-column id="ColumnLayout33" style="align-items: stretch">
-												<davinci-value-display id="VD_SelectInstance"
-													value="Selected Instance">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout22" style="align-items: stretch">
-												<davinci-drop-down id="DD_SelectInstance">
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setSelectedInstance"
-													path="param/args/instance" auto-commit
-													converter="function(value) {return Number(value);}">
-												</crown-binding>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewSelectedInstance" update-on-resume
-													converter="function(value) {return value.toString();}">
-												</crown-edpws-binding>
-												<crown-edpws-binding property="data"
-													name="CSK_MultiHTTPClient/OnNewInstanceList" update-on-resume
-													converter="convertToList">
-												</crown-edpws-binding>
-												</davinci-drop-down>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout23"
-													style="align-items: center; justify-content: space-between">
-												<layout-column id="ColumnLayout24" style="align-items: stretch">
-												<davinci-value-display id="VD_Interface" value="Interface">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout25" style="align-items: stretch">
-												<davinci-drop-down id="DD_Interface"
-													title="Physical Ethernet interface to be used by the client">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewInterface" update-on-resume>
-												</crown-edpws-binding>
-												<crown-edpws-binding property="data"
-													name="CSK_MultiHTTPClient/OnNewInterfaceDropdown" update-on-resume
-													converter="convertToList">
-												</crown-edpws-binding>
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setInterface"
-													path="param/args/interface" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-drop-down>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout5" style="align-items: center">
-												<layout-column id="ColumnLayout12" style="align-items: stretch">
-												<davinci-value-display id="VD_Active" value="Client active">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout13" style="align-items: flex-end">
-												<davinci-toggle-switch id="TS_Activate"
-													title="Activate HTTP client instance">
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setClientActivated"
-													path="param/args/state" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated" update-on-resume>
-												</crown-edpws-binding>
-												</davinci-toggle-switch>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout10" style="align-items: center">
-												<layout-column id="ColumnLayout9">
-												<davinci-value-display id="VD_VerboseMode" value="Verbose mode">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout34">
-												<davinci-checkbox id="CB_VerboseMode"
-													title="Check to enable HTTP client verbose mode"
-													style="align-self: flex-end">
-												<span></span>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewVerboseMode" update-on-resume>
-												</crown-edpws-binding>
-												<crown-set event="change"
-													crown-function="CSK_MultiHTTPClient/setVerboseMode"
-													protocol="crownMSGPACK" crown-path="status">
-												</crown-set>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-checkbox>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout19">
-												<layout-column id="ColumnLayout14" style="align-items: stretch">
-												<davinci-value-display id="VD_ClientAuth"
-													class="myCustomMarginTop16px_CSK_Module_MultiHTTPClient"
-													value="Client Authentication">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout15" style="align-items: stretch">
-												<davinci-checkbox id="CB_ClientAuth"
-													title="Check to enable client authentication"
-													style="align-self: flex-end">
-												<span></span>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setClientAuthentication"
-													path="param/args/state" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewStatusClientAuthentication"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-checkbox>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout41">
-												<layout-column id="ColumnLayout71" style="align-items: stretch">
-												</layout-column>
-												<layout-column id="ColumnLayout70"
-													style="align-items: stretch; flex-grow: 5">
-												<stacked-view id="SV_ClientAuth">
-												<stacked-pane id="SP_ClientAuthActive" value="true">
-												<layout-row id="RowLayout7">
-												<layout-column id="ColumnLayout60" style="align-items: stretch">
-												<layout-row id="RowLayout32">
-												<layout-column id="ColumnLayout61" style="align-items: stretch">
-												</layout-column>
-												<layout-column id="ColumnLayout62" style="align-items: stretch">
-												<appspace-file-upload-button id="FUB_CABundle" button-type="primary"
-													icon="file/file_upload"
-													title="Upload client authentication bundle file with .PEM extension"
-													path="ram/caBundle.pem" is-file>
-												<span>CA bundle(.pem)</span>
-												<crown-set event="finished"
-													crown-function="CSK_MultiHTTPClient/setCABundleFile"
-													protocol="crownMSGPACK" crown-path="success">
-												</crown-set>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</appspace-file-upload-button>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout36">
-												<layout-column id="ColumnLayout63" style="align-items: stretch">
-												<davinci-drop-down id="DD_ClientCertificationType">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewClientCertificateType"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setClientCertificateType"
-													path="param/args/certType" auto-commit>
-												</crown-binding>
-												<davinci-option id="Option_PEM1" value="pem">
-												<span>pem</span>
-												</davinci-option>
-												<davinci-option id="Option_DER1" value="der">
-												<span>der</span>
-												</davinci-option>
-												<davinci-option id="Option_PKCS#12" value="pkcs#12">
-												<span>pkcs#12</span>
-												</davinci-option>
-												</davinci-drop-down>
-												</layout-column>
-												<layout-column id="ColumnLayout64" style="align-items: stretch">
-												<appspace-file-upload-button id="FUB_ClientCertificate"
-													button-type="primary" icon="file/file_upload"
-													path="ram/ClientCertificate.bin" is-file>
-												<span>Client certificate</span>
-												<crown-set event="finished"
-													crown-function="CSK_MultiHTTPClient/setClientCertificateFile"
-													protocol="crownMSGPACK" crown-path="success">
-												</crown-set>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</appspace-file-upload-button>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout37">
-												<layout-column id="ColumnLayout65" style="align-items: stretch">
-												<davinci-drop-down id="DD_ClientCertificationKeyType">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewClientCertificateKeyType"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setClientCertificateKeyType"
-													path="param/args/keyType" auto-commit>
-												</crown-binding>
-												<davinci-option id="Option_PEM2" value="pem">
-												<span>pem</span>
-												</davinci-option>
-												<davinci-option id="Option_DER2" value="der">
-												<span>der</span>
-												</davinci-option>
-												</davinci-drop-down>
-												</layout-column>
-												<layout-column id="ColumnLayout66" style="align-items: stretch">
-												<appspace-file-upload-button id="FUB_ClientCertificateKey"
-													button-type="primary" icon="file/file_upload"
-													path="ram/ClientCertificateKey.bin" is-file>
-												<span>Client certificate key</span>
-												<crown-set event="finished"
-													crown-function="CSK_MultiHTTPClient/setClientCertificateKeyFile"
-													protocol="crownMSGPACK" crown-path="success">
-												</crown-set>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</appspace-file-upload-button>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout39" style="align-items: center">
-												<layout-column id="ColumnLayout67" style="align-items: stretch">
-												<davinci-value-display id="VD_ClientCertificateKeyPassphrase"
-													value="Optional key passphrase">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout68" style="align-items: stretch">
-												<davinci-text-field id="TF_ClientCertificatePassphrase"
-													type="password">
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setClientCertificateKeyPassphrase"
-													path="param/args/passphrase" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-field>
-												</layout-column>
-												</layout-row>
-												</layout-column>
-												</layout-row>
-												</stacked-pane>
-												<stacked-pane id="SP_ClientAuthNotActive" value="false">
-												</stacked-pane>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewStatusClientAuthentication"
-													converter="function(value) {return value.toString();}"
-													auto-commit>
-												</crown-edpws-binding>
-												</stacked-view>
-												</layout-column>
-											</layout-row>
-												<layout-row id="RowLayout20" style="justify-content: space-between">
-												<layout-column id="ColumnLayout17" style="align-items: stretch">
-												<davinci-value-display id="VD_Proxy"
-													class="myCustomMarginTop16px_CSK_Module_MultiHTTPClient"
-													value="Proxy">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout18" style="align-items: stretch">
-												<davinci-checkbox id="Checkbox_Proxy" title="Check to enable proxy"
-													style="align-self: flex-end">
-												<span></span>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewProxyEnableStatus"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setProxyEnabledStatus"
-													path="param/args/state" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-checkbox>
-												<stacked-view id="SV_Proxy">
-												<stacked-pane id="SP_ProxyActive" value="true">
-												<layout-column id="ColumnLayout10" style="align-items: stretch">
-												<layout-row id="RowLayout8">
-												<davinci-text-field id="TF_ProxyURL" type="text" label="URL"
-													title="Proxy URL">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewProxyURL" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setProxyURL"
-													path="param/args/proxyURL" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-field>
-												<davinci-text-field id="TF_ProxyPort" type="text" label="Port"
-													title="Proxy port">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewProxyPort" update-on-resume
-													converter="function(value) {return value.toString();}">
-												</crown-edpws-binding>
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setProxyPort"
-													path="param/args/proxyPort" auto-commit converter="function(value) {return Number(value);}">
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-field>
-												</layout-row>
-												<layout-row id="RowLayout121">
-												<davinci-text-field id="TF_ProxyUsername" type="text" label="Username"
-													title="Proxy username">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewProxyUsername" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setProxyUsername"
-													path="param/args/proxyUsername" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-field>
-												<davinci-text-field id="TF_ProxyPassword" type="password"
-													label="Password" title="Proxy password">
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setProxyPassword"
-													path="param/args/proxyPassword" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-field>
-												</layout-row>
-												</layout-column>
-												</stacked-pane>
-												<stacked-pane id="SP_ProxyNotActive" value="false">
-												<layout-column id="ColumnLayout39" style="align-items: stretch">
-												</layout-column>
-												</stacked-pane>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewProxyEnableStatus" update-on-resume
-													converter="function(value) {return value.toString();}">
-												</crown-edpws-binding>
-												</stacked-view>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout22" style="align-items: center">
-												<layout-column id="ColumnLayout21" style="align-items: stretch">
-												<davinci-value-display id="VD_HostnameVerification"
-													value="Hostname verification">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout23" style="align-items: flex-end">
-												<davinci-checkbox id="Checkbox_HostnameVerification"
-													title="Check to enable hostname verification">
-												<span></span>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewHostnameVerification"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setHostnameVerification"
-													path="param/args/state" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-checkbox>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout21" style="align-items: center">
-												<layout-column id="ColumnLayout19" style="align-items: stretch">
-												<davinci-value-display id="VD_PeerVerification"
-													value="Peer verification">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout20" style="align-items: flex-end">
-												<davinci-checkbox id="Checkbox_PeerVerification"
-													title="Check to enable peer verification">
-												<span></span>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setPeerVerification"
-													path="param/args/state" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewPeerVerification" update-on-resume>
-												</crown-edpws-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												</davinci-checkbox>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout40" style="align-items: center">
-												<layout-column id="ColumnLayout16" style="align-items: stretch">
-												<davinci-value-display id="VD_CookieStore" value="Cookie store"
-													title="Optional filename for cookie storage. File will be stored in '/public/CSK_HTTPClient/..'.">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout69" style="align-items: stretch">
-												<davinci-text-field id="TF_CookieStore" type="text"
-													title="Optional filename for cookie storage. File will be stored in '/public/CSK_HTTPClient/..'.">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewCookieStore" update-on-resume>
-												</crown-edpws-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setCookieStore"
-													path="param/args/filename" auto-commit>
-												</crown-binding>
-												</davinci-text-field>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout31" style="align-items: center">
-												<layout-column id="ColumnLayout58" style="align-items: stretch">
-												<davinci-value-display id="VD_QueueSize"
-													value="Maximum request queue size"
-													title="Maximum size of request queue to skip new requests.">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout59" style="align-items: stretch">
-												<davinci-numeric-field id="NF_MaxQueueSize" type="outline" min="1"
-													max="100" ticks="1" group-separator="," decimal-separator="."
-													format-pattern="0"
-													title="Maximum size of request queue to skip new requests.">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewQueueSize" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setMaxQueueSize" path="param/args/size"
-													auto-commit>
-												</crown-binding>
-												</davinci-numeric-field>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout24">
-												<layout-column id="Column_PersistentData"
-													class="myCustomFrame_CSK_Module_MultiHTTPClient"
-													style="align-items: stretch">
-												<layout-row id="RowLayout4"
-													style="justify-content: space-between; align-items: center">
-												<layout-column id="ColumnLayout5" style="align-items: stretch">
-												<davinci-value-display id="VD_ParameterName" value="Parameter name:"
-													title="Name of the parameters within the CSK_PersistentData module to be uses for this module.">
-												</davinci-value-display>
-												</layout-column>
-												<layout-column id="ColumnLayout6" style="align-items: stretch">
-												<davinci-text-field id="TF_ParameterName" type="text"
-													title="Name of the parameters within the CSK_PersistentData module to be uses for this module.">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewParameterName" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setParameterName" path="param/args/name"
-													auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
-													update-on-resume converter="function(value) {return !value;}">
-												</crown-edpws-binding>
-												</davinci-text-field>
-												</layout-column>
-												</layout-row>
-												<layout-row id="RowLayout2"
-													style="justify-content: space-between; align-items: center">
-												<davinci-value-display id="VD_LoadConfig"
-													value="Load config on app start:"
-													title="Load configured parameters from CSK_PersistentData on app start.">
-												</davinci-value-display>
-												<davinci-checkbox id="CB_LoadConfig"
-													title="Load configured parameters from CSK_PersistentData on app start.">
-												<span></span>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewStatusLoadParameterOnReboot"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
-													update-on-resume converter="function(value) {return !value;}">
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setLoadOnReboot"
-													path="param/args/status" auto-commit>
-												</crown-binding>
-												</davinci-checkbox>
-												</layout-row>
-												<layout-row id="RowLayout3">
-												<layout-column id="ColumnLayout3" style="align-items: stretch">
-												<davinci-button id="B_LoadConfig" type="primary"
-													icon-position="append"
-													title="Load configured parameters from CSK_PersistentData module.">
-												<span>Load Config</span>
-												<crown-binding event="submit"
-													name="CSK_MultiHTTPClient/loadParameters" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
-													update-on-resume converter="function(value) {return !value;}">
-												</crown-edpws-binding>
-												</davinci-button>
-												</layout-column>
-												<layout-column id="ColumnLayout4" style="align-items: stretch">
-												<davinci-button id="B_SaveConfig" type="primary"
-													icon-position="append"
-													title="Save current configured parameters of this module within CSK_PersistentData module.">
-												<span>Save Config</span>
-												<crown-binding event="submit"
-													name="CSK_MultiHTTPClient/sendParameters" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
-													update-on-resume converter="function(value) {return !value;}">
-												</crown-edpws-binding>
-												</davinci-button>
-												</layout-column>
-												</layout-row>
-												</layout-column>
-												</layout-row>
-											</layout-column>
-											<layout-column id="ColumnLayout38"
-												style="align-items: stretch; flex-grow: 2">
-											</layout-column>
-										</layout-row>
-									</layout-column>
-								</layout-row>
-							</davinci-tab>
-							<davinci-tab id="Tab_Requests" label="Requests">
-								<layout-row id="RowLayout25">
-									<layout-column id="ColumnLayout7"
-										style="align-items: stretch; flex-grow: 2">
-										<davinci-value-display id="VD_Requests" label="Request Setup">
-										</davinci-value-display>
-										<layout-row id="RowLayout9" style="justify-content: space-between">
-											<layout-column id="ColumnLayout32" style="align-items: stretch">
-												<davinci-drop-down id="DD_RequestMethod" label="Mode"
-													title="Request method">
-												<davinci-option id="Option_Get" value="GET" style="width: 30px">
-												<span>GET</span>
-												</davinci-option>
-												<davinci-option id="Option_Post" value="POST">
-												<span>POST</span>
-												</davinci-option>
-                                                <davinci-option id="Option-Head" value="HEAD">
-												<span>HEAD</span>
-												</davinci-option>
-                                                <davinci-option id="Option_Put" value="PUT">
-												<span>PUT</span>
-												</davinci-option>
-                                                <davinci-option id="Option_Patch" value="PATCH">
-												<span>PATCH</span>
-												</davinci-option>
-                                                <davinci-option id="Option_Delete" value="DELETE">
-												<span>DELETE</span>
-												</davinci-option>
-                                                <davinci-option id="OptionTrace" value="TRACE">
-												<span>TRACE</span>
-												</davinci-option>
-												<davinci-option id="Option_Options" value="OPTIONS">
-												<span>OPTIONS</span>
-												</davinci-option>
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setRequestMode"
-													path="param/args/mode" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewRequestMode" update-on-resume>
-												</crown-edpws-binding>
-												</davinci-drop-down>
-											</layout-column>
-											<layout-column id="ColumnLayout35"
-												style="align-items: stretch; flex-grow: 4">
-												<davinci-text-field id="TF_RequestEndpoint" type="text"
-													label="Endpoint" title="Endpoint URL">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewRequestEndpoint" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setRequestEndpoint"
-													path="param/args/endpoint" auto-commit>
-												</crown-binding>
-												</davinci-text-field>
-											</layout-column>
-											<layout-column id="ColumnLayout36" style="align-items: stretch">
-												<davinci-text-field id="TF_RequestPort" type="text" label="Port"
-													title="Port for request">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewRequestPort" update-on-resume
-													converter="function(value) {return value.toString();}">
-												</crown-edpws-binding>
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setRequestPort"
-													path="param/args/port" auto-commit converter="function(value) {return Number(value);}">
-												</crown-binding>
-												</davinci-text-field>
-											</layout-column>
-											<layout-column id="ColumnLayout37" style="align-items: stretch">
-												<davinci-button id="Button_SendRequest" type="primary"
-													icon-position="append" style="flex-shrink: 0">
-												<span>Send</span>
-												<crown-binding event="submit"
-													name="CSK_MultiHTTPClient/sendRequestViaUI" auto-commit>
-												</crown-binding>
-												</davinci-button>
-											</layout-column>
-										</layout-row>
-										<layout-row id="RowLayout26">
-											<layout-column id="ColumnLayout42" style="align-items: stretch">
-												<davinci-collapse id="Collapse_Header" collapsed-title="Header"
-													expanded-title="Hide Header">
-												<layout-row id="RowLayout27">
-												<layout-column id="ColumnLayout44" style="align-items: stretch">
-												<layout-row id="RowLayout28">
-												<layout-column id="ColumnLayout55" style="align-items: stretch">
-												<davinci-drop-down id="DD_HeaderList" label="Header list">
-												<crown-edpws-binding property="data"
-													name="CSK_MultiHTTPClient/OnNewHeaderList" update-on-resume
-													converter="convertToList">
-												</crown-edpws-binding>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewSelectedHeader" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/selectRequestHeaderKey"
-													path="param/args/selection" auto-commit>
-												</crown-binding>
-												</davinci-drop-down>
-												</layout-column>
-												<layout-column id="ColumnLayout45" style="align-items: stretch">
-												<davinci-text-field id="TF_HeaderKey" type="text"
-													placeholder="Attribute">
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setRequestHeaderKey"
-													path="param/args/key" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewHeaderKey" update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-field>
-												</layout-column>
-												<layout-column id="ColumnLayout46" style="align-items: stretch">
-												<davinci-text-field id="TF__HeaderValue" type="text"
-													placeholder="Parameter">
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setRequestHeaderValue" path="param/args/value"
-													auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewHeaderValue" update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-field>
-												</layout-column>
-												<layout-column id="ColumnLayout47" style="align-items: stretch">
-												<davinci-button id="Button_AddHeaderAttribute" type="primary"
-													icon-position="append">
-												<span>Add</span>
-												<crown-binding event="submit" name="CSK_MultiHTTPClient/addHeader"
-													auto-commit>
-												</crown-binding>
-												</davinci-button>
-												</layout-column>
-												<layout-column id="ColumnLayout56" style="align-items: stretch">
-												<davinci-button id="Button_DeleteHeader" type="primary"
-													icon-position="append">
-												<span>Delete</span>
-												<crown-binding event="submit" name="CSK_MultiHTTPClient/deleteHeader"
-													auto-commit>
-												</crown-binding>
-												</davinci-button>
-												</layout-column>
-												</layout-row>
-												</layout-column>
-												</layout-row>
-												</davinci-collapse>
-											</layout-column>
-											<layout-column id="ColumnLayout53" style="align-items: stretch">
-												<stacked-view id="SV_ContentActive">
-												<stacked-pane id="SP_ContentActive" value="false">
-												<layout-row id="RowLayout29">
-												<layout-column id="ColumnLayout43" style="align-items: stretch">
-												<davinci-collapse id="Collapse_Content" collapsed-title="Content"
-													expanded-title="Hide Content">
-												<layout-row id="RowLayout30">
-												<layout-column id="ColumnLayout48" style="align-items: stretch">
-												<davinci-text-field id="TF_ContentType" type="text"
-													label="Content type">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewRequestContentType" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setRequestContentType"
-													path="param/args/contentType" auto-commit>
-												</crown-binding>
-												</davinci-text-field>
-												<davinci-text-area id="TA_Content" placeholder="Content"
-													title="e.g. {   &quot;data&quot;:   {     &quot;variableNameA&quot;: ValueA,     &quot;variableNameB&quot;: ValueB, ...  } }"
-													style="height: 200px">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewRequestContent" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setRequestContent" path="param/args/content"
-													auto-commit>
-												</crown-binding>
-												</davinci-text-area>
-												</layout-column>
-												</layout-row>
-												</davinci-collapse>
-												</layout-column>
-												</layout-row>
-												</stacked-pane>
-												<stacked-pane id="SP_ContentNotActive" value="true">
-												</stacked-pane>
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewStatusRequestContentDisabled" update-on-resume
-													converter="function(value) {return value.toString();}">
-												</crown-edpws-binding>
-												</stacked-view>
-											</layout-column>
-										</layout-row>
-										<layout-row id="RowLayout33">
-											<layout-column id="ColumnLayout50" style="align-items: stretch">
-												<davinci-collapse id="Collapse_Response" collapsed-title="Response"
-													expanded-title="Hide Response" open>
-												<layout-row id="RowLayout35">
-												<layout-column id="ColumnLayout52" style="align-items: stretch">
-												<layout-row id="RowLayout12"
-													style="justify-content: flex-end; align-items: center">
-												<davinci-value-display id="VD_ExtendedResponseInfo"
-													value="Extended Response Info"
-													title="Selecte if response should include extended information (e.g. header keys).">
-												</davinci-value-display>
-												<davinci-checkbox id="CB_ExtendedResponseInfo"
-													title="Selecte if response should include extended information (e.g. header keys).">
-												<span></span>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewStatusExtendedResponse"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setExtendedResponse"
-													path="param/args/status" auto-commit>
-												</crown-binding>
-												</davinci-checkbox>
-												</layout-row>
-												<davinci-text-area id="TA_Response" placeholder="Response" readonly
-													style="height: 200px">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewResponseMessage" update-on-resume>
-												</crown-edpws-binding>
-												</davinci-text-area>
-												</layout-column>
-												<layout-column id="ColumnLayout54" style="align-items: stretch">
-												</layout-column>
-												</layout-row>
-												</davinci-collapse>
-											</layout-column>
-										</layout-row>
-										<layout-row id="RowLayout34">
-											<layout-column id="ColumnLayout51"
-												class="myCustomFrame_CSK_Module_MultiHTTPClient"
-												style="align-items: stretch">
-												<davinci-value-display id="VD_PreconfiguredRequests"
-													value="Preconfigured Requests">
-												</davinci-value-display>
-												<layout-row id="RowLayout13"
-													style="justify-content: space-between; align-items: center">
-												<layout-column id="ColumnLayout28" style="align-items: stretch">
-												<davinci-text-field id="TF_RequestName"
-													class="myCustomMarginTop2px_CSK_Module_MultiHTTPClient"
-													type="text" label="Request name" title="Custom request name">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewRequestName" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setRequestName" path="param/args/name"
-													auto-commit>
-												</crown-binding>
-												</davinci-text-field>
-												</layout-column>
-												<layout-column id="ColumnLayout41" style="align-items: stretch">
-												<davinci-text-field id="TF_RegisteredEvent"
-													class="myCustomMarginTop2px_CSK_Module_MultiHTTPClient"
-													type="text" label="Registered Event">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewStatusRegisteredEvent"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setRequestRegisteredEvent"
-													path="param/args/event" auto-commit>
-												</crown-binding>
-												</davinci-text-field>
-												</layout-column>
-												<layout-column id="ColumnLayout49" style="align-items: stretch">
-												<layout-row id="RowLayout14" style="align-items: center">
-												<layout-column id="ColumnLayout31" style="align-items: stretch">
-												<davinci-checkbox id="Checkbox_PeriodicRequest"
-													title="Check to enable periodic request initiation">
-												<span>Periodic</span>
-												<crown-edpws-binding property="checked"
-													name="CSK_MultiHTTPClient/OnNewRequestPeriodicStatus"
-													update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change"
-													name="CSK_MultiHTTPClient/setRequestPeriodicState"
-													path="param/args/state" auto-commit>
-												</crown-binding>
-												</davinci-checkbox>
-												</layout-column>
-												<layout-column id="ColumnLayout30" style="align-items: stretch">
-												<davinci-numeric-field id="NF_RequestTimer" type="outline" min="10"
-													max="3600000" ticks="1" group-separator="," decimal-separator="."
-													format-pattern="0" unit="ms" title="Cycle time">
-												<crown-edpws-binding property="value"
-													name="CSK_MultiHTTPClient/OnNewRequestPeriod" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="change" name="CSK_MultiHTTPClient/setRequestPeriod"
-													path="param/args/period" auto-commit>
-												</crown-binding>
-												<crown-edpws-binding property="disabled"
-													name="CSK_MultiHTTPClient/OnNewRequestPeriodicStatus"
-													update-on-resume converter="function(value) {return !value;}">
-												</crown-edpws-binding>
-												</davinci-numeric-field>
-												</layout-column>
-												</layout-row>
-												</layout-column>
-												<layout-column id="ColumnLayout26" style="align-items: stretch">
-												<layout-row id="RowLayout18">
-												<layout-column id="ColumnLayout57" style="align-items: stretch">
-												<davinci-button id="Button_AddEditRequest" type="primary"
-													icon-position="append"
-													title="Add request if no request is selected or Edit the selected request">
-												<span>Add/Edit request</span>
-												<crown-binding event="submit"
-													name="CSK_MultiHTTPClient/addEditRequestViaUI" auto-commit>
-												</crown-binding>
-												</davinci-button>
-												</layout-column>
-												<layout-column id="ColumnLayout27" style="align-items: stretch">
-												<davinci-button id="Button_RemoveRequest" type="primary"
-													icon-position="append" title="Remove request">
-												<span>Remove request</span>
-												<crown-binding event="submit" name="CSK_MultiHTTPClient/removeRequest"
-													auto-commit>
-												</crown-binding>
-												</davinci-button>
-												</layout-column>
-											</layout-row>
-												</layout-column>
-												</layout-row>
-												<curie-table id="DT_Requests"
-													title="Table containing all the added requests"
-													style="flex-grow: 1">
-												<curie-table-column id="RequestNo" header="RequestNo"
-													style="flex-grow: 1">
-												</curie-table-column>
-												<curie-table-column id="Name" header="Name" style="flex-grow: 1">
-												</curie-table-column>
-												<curie-table-column id="Mode" header="Mode" style="flex-grow: 1">
-												</curie-table-column>
-												<curie-table-column id="Endpoint" header="Endpoint"
-													style="flex-grow: 1">
-												</curie-table-column>
-												<curie-table-column id="Port" header="Port" style="flex-grow: 1">
-												</curie-table-column>
-												<curie-table-column id="Event" header="Event" style="flex-grow: 1">
-												</curie-table-column>
-												<curie-table-column id="Periodic" header="Periodic">
-												</curie-table-column>
-												<curie-table-column id="Period" header="Period">
-												</curie-table-column>
-												<crown-edpws-binding property="data"
-													name="CSK_MultiHTTPClient/OnNewRequestsTable" update-on-resume>
-												</crown-edpws-binding>
-												<crown-binding event="row-selected"
-													name="CSK_MultiHTTPClient/setSelectedRequestViaUI"
-													path="param/args/jsonRowData" auto-commit>
-												</crown-binding>
-												</curie-table>
-											</layout-column>
-										</layout-row>
-									</layout-column>
-								</layout-row>
-							</davinci-tab>
-							<davinci-tab id="Tab_Instances" label="Instances">
-								<layout-row id="RowLayout17">
-									<layout-column id="ColumnLayout8" style="align-items: stretch">
-										<davinci-button id="Button_AddInstance" type="primary"
-											icon-position="append">
-											<span>Add instance</span>
-											<crown-binding event="submit" name="CSK_MultiHTTPClient/addInstance"
-												auto-commit>
-											</crown-binding>
-										</davinci-button>
-										<davinci-button id="Button_ResetInstances" type="primary"
-											icon-position="append"
-											title="Reset insances to single instance. Reload app after reseting.">
-											<span>Reset instances</span>
-											<crown-binding event="submit" name="CSK_MultiHTTPClient/resetInstances"
-												auto-commit>
-											</crown-binding>
-										</davinci-button>
-									</layout-column>
-									<layout-column id="ColumnLayout40"
-										style="align-items: stretch; flex-grow: 3">
-									</layout-column>
-								</layout-row>
-							</davinci-tab>
-						</davinci-tabs>
-					</layout-column>
-				</layout-row>
-			</stacked-pane>
-			<stacked-pane id="SP_LoginNOK" value="false">
-				<layout-row id="RowLayout6">
-					<davinci-callout id="Callout1" type="info">
-						<span>Please log in via UserManagement module.</span>
-					</davinci-callout>
-				</layout-row>
-			</stacked-pane>
-			<crown-edpws-binding property="value"
-				name="CSK_MultiHTTPClient/OnUserLevelMaintenanceActive" update-on-resume
-				converter="function(value) {return value.toString();}">
-			</crown-edpws-binding>
-		</stacked-view>
-		<stacked-view id="SV_PageCalled">
-			<crown-binding property="value" name="CSK_MultiHTTPClient/pageCalled"
-				path="result/data/empty" auto-update="0" update-on-resume>
-			</crown-binding>
-		</stacked-view>
-	</layout-column>
-  
+<layout-row id="RowLayout1" class="myCustomBackground_CSK_Module_MultiHTTPClient">
+    <layout-column id="ColumnLayout1" class="myCustomFrameNoColor_CSK_Module_MultiHTTPClient"
+        style="align-items: stretch">
+        <layout-row id="RowLayout58" class="myCustomSpacerVert20_CSK_Module_MultiHTTPClient"
+            style="flex-grow: 0; flex-shrink: 0">
+        </layout-row>
+        <layout-row id="RowLayout59">
+            <layout-column id="ColumnLayout82" style="align-items: stretch">
+                <layout-row id="RowLayout01" style="align-items: baseline">
+                    <davinci-value-display id="V_Title" class="myCustomLabel_CSK_Module_MultiHTTPClient"
+                        value="HTTP Client">
+                    </davinci-value-display>
+                    <davinci-value-display id="VD_Version">
+                        <crown-edpws-binding property="value" name="CSK_MultiHTTPClient/OnNewStatusModuleVersion"
+                            update-on-resume>
+                        </crown-edpws-binding>
+                    </davinci-value-display>
+                </layout-row>
+            </layout-column>
+        </layout-row>
+        <stacked-view id="SV_FeatureSupport">
+            <stacked-pane id="SP_Supported" value="true">
+                <stacked-view id="SV_UserRole">
+                    <stacked-pane id="SP_LoginOK" value="true">
+                        <layout-row id="RowLayout16">
+                            <layout-column id="ColumnLayout11" style="align-items: stretch">
+                                <layout-row id="RowLayout42" class="myCustomMarginFirstRow_CSK_Module_MultiHTTPClient"
+                                    style="align-items: stretch">
+                                    <layout-column id="ColumnLayout3" style="align-items: stretch">
+                                        <layout-row id="RowLayout4" style="align-items: baseline">
+                                            <layout-column id="ColumnLayout22" style="align-items: stretch">
+                                            </layout-column>
+                                            <layout-column id="ColumnLayout83" style="align-items: stretch">
+                                                <layout-row id="RowLayout15" style="align-items: center">
+                                                    <layout-column id="ColumnLayout33" style="align-items: stretch">
+                                                        <davinci-value-display id="VD_SelectInstance" value="Instance">
+                                                        </davinci-value-display>
+                                                    </layout-column>
+                                                    <layout-column id="ColumnLayout4" style="align-items: stretch">
+                                                        <davinci-drop-down id="DD_SelectInstance">
+                                                            <crown-binding event="change"
+                                                                name="CSK_MultiHTTPClient/setSelectedInstance"
+                                                                path="param/args/instance" auto-commit
+                                                                converter="function(value) {return Number(value);}">
+                                                            </crown-binding>
+                                                            <crown-edpws-binding property="value"
+                                                                name="CSK_MultiHTTPClient/OnNewSelectedInstance"
+                                                                update-on-resume
+                                                                converter="function(value) {return value.toString();}">
+                                                            </crown-edpws-binding>
+                                                            <crown-edpws-binding property="data"
+                                                                name="CSK_MultiHTTPClient/OnNewInstanceList"
+                                                                update-on-resume converter="convertToList">
+                                                            </crown-edpws-binding>
+                                                        </davinci-drop-down>
+                                                    </layout-column>
+                                                    <layout-column id="ColumnLayout78" style="align-items: stretch">
+                                                        <layout-row id="RowLayout17"
+                                                            class="myCustomMarginTop7PX_CSK_Module_MultiHTTPClient"
+                                                            style="justify-content: center; align-items: center">
+                                                            <davinci-button id="Button_AddInstance"
+                                                                class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                type="outline" icon-position="append"
+                                                                title="Add instance" icon="content/add">
+                                                                <span></span>
+                                                                <crown-binding event="submit"
+                                                                    name="CSK_MultiHTTPClient/addInstance" auto-commit>
+                                                                </crown-binding>
+                                                            </davinci-button>
+                                                            <davinci-button id="Button_ResetInstances"
+                                                                class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                type="outline" icon-position="append"
+                                                                title="Reset instances to one single instance. New setup needs to be saved and restart app to clear old threads."
+                                                                icon="action/delete">
+                                                                <span></span>
+                                                                <crown-binding event="submit"
+                                                                    name="CSK_MultiHTTPClient/resetInstances"
+                                                                    auto-commit>
+                                                                </crown-binding>
+                                                            </davinci-button>
+                                                        </layout-row>
+                                                    </layout-column>
+                                                </layout-row>
+                                            </layout-column>
+                                        </layout-row>
+                                    </layout-column>
+                                    <layout-column id="ColumnLayout8"
+                                        class="myCustomBorderLeft_CSK_Module_MultiHTTPClient"
+                                        style="align-items: stretch">
+                                        <layout-row id="RowLayout46" style="align-items: baseline">
+                                            <layout-column id="ColumnLayout81" style="align-items: stretch">
+                                                <layout-row id="RowLayout24" style="align-items: center">
+                                                    <layout-column id="ColumnLayout57" style="align-items: stretch">
+                                                        <davinci-value-display id="VD_PersistentData"
+                                                            value="Persistent Data">
+                                                        </davinci-value-display>
+                                                    </layout-column>
+                                                    <layout-column id="ColumnLayout73"
+                                                        style="align-items: stretch; flex-grow: 2">
+                                                        <davinci-text-field id="TF_ParameterName" type="text"
+                                                            title="Name of the parameters within the CSK_PersistentData module to be uses for this module.">
+                                                            <crown-edpws-binding property="value"
+                                                                name="CSK_MultiHTTPClient/OnNewParameterName"
+                                                                update-on-resume>
+                                                            </crown-edpws-binding>
+                                                            <crown-binding event="change"
+                                                                name="CSK_MultiHTTPClient/setParameterName"
+                                                                path="param/args/name" auto-commit>
+                                                            </crown-binding>
+                                                            <crown-edpws-binding property="disabled"
+                                                                name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
+                                                                update-on-resume
+                                                                converter="function(value) {return !value;}">
+                                                            </crown-edpws-binding>
+                                                        </davinci-text-field>
+                                                    </layout-column>
+                                                    <layout-column id="Column_PersistentData"
+                                                        style="align-items: stretch">
+                                                        <layout-row id="RowLayout55">
+                                                            <layout-column id="ColumnLayout76"
+                                                                style="align-items: stretch">
+                                                                <layout-row id="RowLayout3"
+                                                                    class="myCustomMarginTop7PX_CSK_Module_MultiHTTPClient"
+                                                                    style="justify-content: center; align-items: center">
+                                                                    <davinci-button id="B_LoadConfig"
+                                                                        class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                        type="outline" icon-position="append"
+                                                                        title="Load configured parameters from CSK_PersistentData module."
+                                                                        icon="action/history">
+                                                                        <span></span>
+                                                                        <crown-binding event="submit"
+                                                                            name="CSK_MultiHTTPClient/loadParameters"
+                                                                            auto-commit>
+                                                                        </crown-binding>
+                                                                        <crown-edpws-binding property="disabled"
+                                                                            name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
+                                                                            update-on-resume
+                                                                            converter="function(value) {return !value;}">
+                                                                        </crown-edpws-binding>
+                                                                    </davinci-button>
+                                                                    <davinci-button id="B_SaveConfig"
+                                                                        class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                        type="outline" icon-position="append"
+                                                                        title="Save current configured parameters of this module within CSK_PersistentData module."
+                                                                        icon="content/save">
+                                                                        <span></span>
+                                                                        <crown-binding event="submit"
+                                                                            name="CSK_MultiHTTPClient/sendParameters"
+                                                                            auto-commit>
+                                                                        </crown-binding>
+                                                                        <crown-edpws-binding property="disabled"
+                                                                            name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
+                                                                            update-on-resume
+                                                                            converter="function(value) {return !value;}">
+                                                                        </crown-edpws-binding>
+                                                                    </davinci-button>
+                                                                </layout-row>
+                                                            </layout-column>
+                                                        </layout-row>
+                                                    </layout-column>
+                                                </layout-row>
+                                                <layout-row id="RowLayout57" style="align-items: center">
+                                                    <layout-column id="ColumnLayout5" style="align-items: stretch">
+                                                        <davinci-collapse id="Collapse_PersistentData"
+                                                            class="myCustomPersistentDataMargin_CSK_Module_MultiHTTPClient"
+                                                            collapsed-title="..." expanded-title="...">
+                                                            <layout-row id="RowLayout45"
+                                                                class="myCustomPersistentDataMarginBack_CSK_Module_MultiHTTPClient"
+                                                                style="align-items: center">
+                                                                <layout-column id="ColumnLayout6"
+                                                                    style="align-items: stretch">
+                                                                </layout-column>
+                                                                <layout-column id="ColumnLayout72"
+                                                                    style="align-items: stretch; flex-grow: 2">
+                                                                    <layout-row id="RowLayout62">
+                                                                        <layout-column id="ColumnLayout80"
+                                                                            style="align-items: stretch">
+                                                                            <layout-row id="RowLayout2"
+                                                                                style="align-items: center">
+                                                                                <davinci-value-display
+                                                                                    id="VD_LoadConfig"
+                                                                                    value="Load on reboot:"
+                                                                                    title="Load configured parameters from CSK_PersistentData on app start.">
+                                                                                </davinci-value-display>
+                                                                                <davinci-checkbox id="CB_LoadConfig"
+                                                                                    title="Load configured parameters from CSK_PersistentData on app start.">
+                                                                                    <span></span>
+                                                                                    <crown-edpws-binding
+                                                                                        property="checked"
+                                                                                        name="CSK_MultiHTTPClient/OnNewStatusLoadParameterOnReboot"
+                                                                                        update-on-resume>
+                                                                                    </crown-edpws-binding>
+                                                                                    <crown-edpws-binding
+                                                                                        property="disabled"
+                                                                                        name="CSK_MultiHTTPClient/OnPersistentDataModuleAvailable"
+                                                                                        update-on-resume
+                                                                                        converter="function(value) {return !value;}">
+                                                                                    </crown-edpws-binding>
+                                                                                    <crown-binding event="change"
+                                                                                        name="CSK_MultiHTTPClient/setLoadOnReboot"
+                                                                                        path="param/args/status"
+                                                                                        auto-commit>
+                                                                                    </crown-binding>
+                                                                                </davinci-checkbox>
+                                                                            </layout-row>
+                                                                        </layout-column>
+                                                                        <layout-column id="ColumnLayout77"
+                                                                            style="align-items: stretch">
+                                                                            <layout-row id="RowLayout56"
+                                                                                style="align-items: center; justify-content: flex-end">
+                                                                                <davinci-value-display
+                                                                                    id="VD_FLowConfigPrio"
+                                                                                    value="Flow config priority:"
+                                                                                    title="FlowConfig priority for FlowConfig relevant configurations.">
+                                                                                </davinci-value-display>
+                                                                                <davinci-checkbox id="CB_FlowConfigPrio"
+                                                                                    title="FlowConfig priority for FlowConfig relevant configurations.">
+                                                                                    <span></span>
+                                                                                    <crown-edpws-binding
+                                                                                        property="checked"
+                                                                                        name="CSK_MultiHTTPClient/OnNewStatusFlowConfigPriority"
+                                                                                        update-on-resume>
+                                                                                    </crown-edpws-binding>
+                                                                                    <crown-binding event="change"
+                                                                                        name="CSK_MultiHTTPClient/setFlowConfigPriority"
+                                                                                        path="param/args/status"
+                                                                                        auto-commit>
+                                                                                    </crown-binding>
+                                                                                </davinci-checkbox>
+                                                                            </layout-row>
+                                                                        </layout-column>
+                                                                    </layout-row>
+                                                                </layout-column>
+                                                                <layout-column id="ColumnLayout79"
+                                                                    style="align-items: stretch">
+                                                                </layout-column>
+                                                            </layout-row>
+                                                        </davinci-collapse>
+                                                    </layout-column>
+                                                </layout-row>
+                                            </layout-column>
+                                        </layout-row>
+                                    </layout-column>
+                                </layout-row>
+                                <layout-row id="RowLayout60" class="myCustomSpacerVert10_CSK_Module_MultiHTTPClient">
+                                </layout-row>
+                                <layout-row id="RowLayout47" class="myCustomBorderBottom_CSK_Module_MultiHTTPClient"
+                                    style="flex-grow: 0; flex-shrink: 0">
+                                </layout-row>
+                                <layout-row id="RowLayout61" class="myCustomSpacerVert10_CSK_Module_MultiHTTPClient"
+                                    style="flex-grow: 0; flex-shrink: 0">
+                                </layout-row>
+                                <davinci-tabs id="Tabs_Setup" type="modern">
+                                    <davinci-tab id="Tab_Settings" title="Configuration" icon="action/settings">
+                                        <layout-row id="RowLayout38">
+                                            <layout-column id="ColumnLayout29" style="align-items: stretch">
+                                                <layout-row id="RowLayout11" style="align-items: stretch">
+                                                    <layout-column id="ColumnLayout56" style="align-items: stretch">
+                                                        <layout-row id="RowLayout54">
+                                                            <layout-column id="ColumnLayout2"
+                                                                class="myCustomFrame_CSK_Module_MultiHTTPClient"
+                                                                style="align-items: stretch">
+                                                                <davinci-value-display id="VD_Configuration"
+                                                                    class="myCustomFrameLabel_CSK_Module_MultiHTTPClient"
+                                                                    label="Configuration"
+                                                                    style="align-self: flex-start">
+                                                                </davinci-value-display>
+                                                                <layout-row id="RowLayout23"
+                                                                    style="align-items: center; justify-content: space-between">
+                                                                    <layout-column id="ColumnLayout24"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display id="VD_Interface"
+                                                                            value="Interface">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout25"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-drop-down id="DD_Interface"
+                                                                            title="Physical Ethernet interface to be used by the client">
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewInterface"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-edpws-binding property="data"
+                                                                                name="CSK_MultiHTTPClient/OnNewInterfaceDropdown"
+                                                                                update-on-resume
+                                                                                converter="convertToList">
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setInterface"
+                                                                                path="param/args/interface" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-drop-down>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout49"
+                                                                    class="myCustomSpacerVert10_CSK_Module_MultiHTTPClient">
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout5" style="align-items: center">
+                                                                    <layout-column id="ColumnLayout12"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display id="VD_Active"
+                                                                            value="Client active">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout13"
+                                                                        style="align-items: flex-end">
+                                                                        <davinci-toggle-switch id="TS_Activate"
+                                                                            title="Activate HTTP client instance">
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setClientActivated"
+                                                                                path="param/args/state" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-toggle-switch>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout10"
+                                                                    style="align-items: center">
+                                                                    <layout-column id="ColumnLayout9">
+                                                                        <davinci-value-display id="VD_VerboseMode"
+                                                                            value="Verbose mode">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout34">
+                                                                        <davinci-checkbox id="CB_VerboseMode"
+                                                                            title="Check to enable HTTP client verbose mode"
+                                                                            style="align-self: flex-end">
+                                                                            <span></span>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewVerboseMode"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-set event="change"
+                                                                                crown-function="CSK_MultiHTTPClient/setVerboseMode"
+                                                                                protocol="crownMSGPACK"
+                                                                                crown-path="status">
+                                                                            </crown-set>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-checkbox>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout19">
+                                                                    <layout-column id="ColumnLayout14"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display id="VD_ClientAuth"
+                                                                            class="myCustomMarginTop16px_CSK_Module_MultiHTTPClient"
+                                                                            value="Client Authentication">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout15"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-checkbox id="CB_ClientAuth"
+                                                                            title="Check to enable client authentication"
+                                                                            style="align-self: flex-end">
+                                                                            <span></span>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setClientAuthentication"
+                                                                                path="param/args/state" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientAuthentication"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-checkbox>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout41">
+                                                                    <layout-column id="ColumnLayout71"
+                                                                        style="align-items: stretch">
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout70"
+                                                                        style="align-items: stretch; flex-grow: 5">
+                                                                        <stacked-view id="SV_ClientAuth">
+                                                                            <stacked-pane id="SP_ClientAuthActive"
+                                                                                value="true">
+                                                                                <layout-row id="RowLayout7">
+                                                                                    <layout-column id="ColumnLayout60"
+                                                                                        style="align-items: stretch">
+                                                                                        <layout-row id="RowLayout32">
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout61"
+                                                                                                style="align-items: stretch">
+                                                                                            </layout-column>
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout62"
+                                                                                                style="align-items: stretch">
+                                                                                                <appspace-file-upload-button
+                                                                                                    id="FUB_CABundle"
+                                                                                                    button-type="outline"
+                                                                                                    icon="file/file_upload"
+                                                                                                    title="Upload client authentication bundle file with .PEM extension"
+                                                                                                    path="ram/caBundle.pem"
+                                                                                                    is-file>
+                                                                                                    <span>CA bundle(.pem)</span>
+                                                                                                    <crown-set
+                                                                                                        event="finished"
+                                                                                                        crown-function="CSK_MultiHTTPClient/setCABundleFile"
+                                                                                                        protocol="crownMSGPACK"
+                                                                                                        crown-path="success">
+                                                                                                    </crown-set>
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="disabled"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                </appspace-file-upload-button>
+                                                                                            </layout-column>
+                                                                                        </layout-row>
+                                                                                        <layout-row id="RowLayout36">
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout63"
+                                                                                                style="align-items: stretch">
+                                                                                                <davinci-drop-down
+                                                                                                    id="DD_ClientCertificationType"
+                                                                                                    label="Client Certification Type">
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="value"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewClientCertificateType"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                    <crown-binding
+                                                                                                        event="change"
+                                                                                                        name="CSK_MultiHTTPClient/setClientCertificateType"
+                                                                                                        path="param/args/certType"
+                                                                                                        auto-commit>
+                                                                                                    </crown-binding>
+                                                                                                    <davinci-option
+                                                                                                        id="Option_PEM1"
+                                                                                                        value="pem">
+                                                                                                        <span>pem</span>
+                                                                                                    </davinci-option>
+                                                                                                    <davinci-option
+                                                                                                        id="Option_DER1"
+                                                                                                        value="der">
+                                                                                                        <span>der</span>
+                                                                                                    </davinci-option>
+                                                                                                    <davinci-option
+                                                                                                        id="Option_PKCS#12"
+                                                                                                        value="pkcs#12">
+                                                                                                        <span>pkcs#12</span>
+                                                                                                    </davinci-option>
+                                                                                                </davinci-drop-down>
+                                                                                            </layout-column>
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout64"
+                                                                                                style="align-items: stretch">
+                                                                                                <appspace-file-upload-button
+                                                                                                    id="FUB_ClientCertificate"
+                                                                                                    button-type="outline"
+                                                                                                    icon="file/file_upload"
+                                                                                                    path="ram/ClientCertificate.bin"
+                                                                                                    is-file>
+                                                                                                    <span>Client certificate</span>
+                                                                                                    <crown-set
+                                                                                                        event="finished"
+                                                                                                        crown-function="CSK_MultiHTTPClient/setClientCertificateFile"
+                                                                                                        protocol="crownMSGPACK"
+                                                                                                        crown-path="success">
+                                                                                                    </crown-set>
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="disabled"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                </appspace-file-upload-button>
+                                                                                            </layout-column>
+                                                                                        </layout-row>
+                                                                                        <layout-row id="RowLayout37">
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout65"
+                                                                                                style="align-items: stretch">
+                                                                                                <davinci-drop-down
+                                                                                                    id="DD_ClientCertificationKeyType"
+                                                                                                    label="Client Certification Key Type">
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="value"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewClientCertificateKeyType"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                    <crown-binding
+                                                                                                        event="change"
+                                                                                                        name="CSK_MultiHTTPClient/setClientCertificateKeyType"
+                                                                                                        path="param/args/keyType"
+                                                                                                        auto-commit>
+                                                                                                    </crown-binding>
+                                                                                                    <davinci-option
+                                                                                                        id="Option_PEM2"
+                                                                                                        value="pem">
+                                                                                                        <span>pem</span>
+                                                                                                    </davinci-option>
+                                                                                                    <davinci-option
+                                                                                                        id="Option_DER2"
+                                                                                                        value="der">
+                                                                                                        <span>der</span>
+                                                                                                    </davinci-option>
+                                                                                                </davinci-drop-down>
+                                                                                            </layout-column>
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout66"
+                                                                                                style="align-items: stretch">
+                                                                                                <appspace-file-upload-button
+                                                                                                    id="FUB_ClientCertificateKey"
+                                                                                                    button-type="outline"
+                                                                                                    icon="file/file_upload"
+                                                                                                    path="ram/ClientCertificateKey.bin"
+                                                                                                    is-file>
+                                                                                                    <span>Client certificate key</span>
+                                                                                                    <crown-set
+                                                                                                        event="finished"
+                                                                                                        crown-function="CSK_MultiHTTPClient/setClientCertificateKeyFile"
+                                                                                                        protocol="crownMSGPACK"
+                                                                                                        crown-path="success">
+                                                                                                    </crown-set>
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="disabled"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                </appspace-file-upload-button>
+                                                                                            </layout-column>
+                                                                                        </layout-row>
+                                                                                        <layout-row id="RowLayout39"
+                                                                                            style="align-items: center">
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout67"
+                                                                                                style="align-items: flex-end">
+                                                                                                <davinci-value-display
+                                                                                                    id="VD_ClientCertificateKeyPassphrase"
+                                                                                                    value="Optional key passphrase">
+                                                                                                </davinci-value-display>
+                                                                                            </layout-column>
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout68"
+                                                                                                style="align-items: stretch">
+                                                                                                <davinci-text-field
+                                                                                                    id="TF_ClientCertificatePassphrase"
+                                                                                                    type="password">
+                                                                                                    <crown-binding
+                                                                                                        event="change"
+                                                                                                        name="CSK_MultiHTTPClient/setClientCertificateKeyPassphrase"
+                                                                                                        path="param/args/passphrase"
+                                                                                                        auto-commit>
+                                                                                                    </crown-binding>
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="disabled"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                </davinci-text-field>
+                                                                                            </layout-column>
+                                                                                        </layout-row>
+                                                                                    </layout-column>
+                                                                                </layout-row>
+                                                                            </stacked-pane>
+                                                                            <stacked-pane id="SP_ClientAuthNotActive"
+                                                                                value="false">
+                                                                            </stacked-pane>
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientAuthentication"
+                                                                                converter="function(value) {return value.toString();}"
+                                                                                auto-commit>
+                                                                            </crown-edpws-binding>
+                                                                        </stacked-view>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout20"
+                                                                    style="justify-content: space-between">
+                                                                    <layout-column id="ColumnLayout17"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display id="VD_Proxy"
+                                                                            class="myCustomMarginTop16px_CSK_Module_MultiHTTPClient"
+                                                                            value="Proxy">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout18"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-checkbox id="Checkbox_Proxy"
+                                                                            title="Check to enable proxy"
+                                                                            style="align-self: flex-end">
+                                                                            <span></span>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewProxyEnableStatus"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setProxyEnabledStatus"
+                                                                                path="param/args/state" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-checkbox>
+                                                                        <stacked-view id="SV_Proxy">
+                                                                            <stacked-pane id="SP_ProxyActive"
+                                                                                value="true">
+                                                                                <layout-column id="ColumnLayout10"
+                                                                                    style="align-items: stretch">
+                                                                                    <layout-row id="RowLayout8">
+                                                                                        <davinci-text-field
+                                                                                            id="TF_ProxyURL" type="text"
+                                                                                            label="URL"
+                                                                                            title="Proxy URL">
+                                                                                            <crown-edpws-binding
+                                                                                                property="value"
+                                                                                                name="CSK_MultiHTTPClient/OnNewProxyURL"
+                                                                                                update-on-resume>
+                                                                                            </crown-edpws-binding>
+                                                                                            <crown-binding
+                                                                                                event="change"
+                                                                                                name="CSK_MultiHTTPClient/setProxyURL"
+                                                                                                path="param/args/proxyURL"
+                                                                                                auto-commit>
+                                                                                            </crown-binding>
+                                                                                            <crown-edpws-binding
+                                                                                                property="disabled"
+                                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                update-on-resume>
+                                                                                            </crown-edpws-binding>
+                                                                                        </davinci-text-field>
+                                                                                        <davinci-text-field
+                                                                                            id="TF_ProxyPort"
+                                                                                            type="text" label="Port"
+                                                                                            title="Proxy port">
+                                                                                            <crown-edpws-binding
+                                                                                                property="value"
+                                                                                                name="CSK_MultiHTTPClient/OnNewProxyPort"
+                                                                                                update-on-resume
+                                                                                                converter="function(value) {return value.toString();}">
+                                                                                            </crown-edpws-binding>
+                                                                                            <crown-binding
+                                                                                                event="change"
+                                                                                                name="CSK_MultiHTTPClient/setProxyPort"
+                                                                                                path="param/args/proxyPort"
+                                                                                                auto-commit
+                                                                                                converter="function(value) {return Number(value);}">
+                                                                                            </crown-binding>
+                                                                                            <crown-edpws-binding
+                                                                                                property="disabled"
+                                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                update-on-resume>
+                                                                                            </crown-edpws-binding>
+                                                                                        </davinci-text-field>
+                                                                                    </layout-row>
+                                                                                    <layout-row id="RowLayout121">
+                                                                                        <davinci-text-field
+                                                                                            id="TF_ProxyUsername"
+                                                                                            type="text" label="Username"
+                                                                                            title="Proxy username">
+                                                                                            <crown-edpws-binding
+                                                                                                property="value"
+                                                                                                name="CSK_MultiHTTPClient/OnNewProxyUsername"
+                                                                                                update-on-resume>
+                                                                                            </crown-edpws-binding>
+                                                                                            <crown-binding
+                                                                                                event="change"
+                                                                                                name="CSK_MultiHTTPClient/setProxyUsername"
+                                                                                                path="param/args/proxyUsername"
+                                                                                                auto-commit>
+                                                                                            </crown-binding>
+                                                                                            <crown-edpws-binding
+                                                                                                property="disabled"
+                                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                update-on-resume>
+                                                                                            </crown-edpws-binding>
+                                                                                        </davinci-text-field>
+                                                                                        <davinci-text-field
+                                                                                            id="TF_ProxyPassword"
+                                                                                            type="password"
+                                                                                            label="Password"
+                                                                                            title="Proxy password">
+                                                                                            <crown-binding
+                                                                                                event="change"
+                                                                                                name="CSK_MultiHTTPClient/setProxyPassword"
+                                                                                                path="param/args/proxyPassword"
+                                                                                                auto-commit>
+                                                                                            </crown-binding>
+                                                                                            <crown-edpws-binding
+                                                                                                property="disabled"
+                                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                update-on-resume>
+                                                                                            </crown-edpws-binding>
+                                                                                        </davinci-text-field>
+                                                                                    </layout-row>
+                                                                                </layout-column>
+                                                                            </stacked-pane>
+                                                                            <stacked-pane id="SP_ProxyNotActive"
+                                                                                value="false">
+                                                                                <layout-column id="ColumnLayout39"
+                                                                                    style="align-items: stretch">
+                                                                                </layout-column>
+                                                                            </stacked-pane>
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewProxyEnableStatus"
+                                                                                update-on-resume
+                                                                                converter="function(value) {return value.toString();}">
+                                                                            </crown-edpws-binding>
+                                                                        </stacked-view>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout22"
+                                                                    style="align-items: center">
+                                                                    <layout-column id="ColumnLayout21"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display
+                                                                            id="VD_HostnameVerification"
+                                                                            value="Hostname verification">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout23"
+                                                                        style="align-items: flex-end">
+                                                                        <davinci-checkbox
+                                                                            id="Checkbox_HostnameVerification"
+                                                                            title="Check to enable hostname verification">
+                                                                            <span></span>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewHostnameVerification"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setHostnameVerification"
+                                                                                path="param/args/state" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-checkbox>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout21"
+                                                                    style="align-items: center">
+                                                                    <layout-column id="ColumnLayout19"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display id="VD_PeerVerification"
+                                                                            value="Peer verification">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout20"
+                                                                        style="align-items: flex-end">
+                                                                        <davinci-checkbox id="Checkbox_PeerVerification"
+                                                                            title="Check to enable peer verification">
+                                                                            <span></span>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setPeerVerification"
+                                                                                path="param/args/state" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewPeerVerification"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-checkbox>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout40"
+                                                                    style="align-items: center">
+                                                                    <layout-column id="ColumnLayout16"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display id="VD_CookieStore"
+                                                                            value="Cookie store"
+                                                                            title="Optional filename for cookie storage. File will be stored in '/public/CSK_HTTPClient/..'.">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout69"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-text-field id="TF_CookieStore"
+                                                                            type="text"
+                                                                            title="Optional filename for cookie storage. File will be stored in '/public/CSK_HTTPClient/..'.">
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewCookieStore"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setCookieStore"
+                                                                                path="param/args/filename" auto-commit>
+                                                                            </crown-binding>
+                                                                        </davinci-text-field>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout31"
+                                                                    style="align-items: center">
+                                                                    <layout-column id="ColumnLayout58"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display id="VD_QueueSize"
+                                                                            value="Maximum request queue size"
+                                                                            title="Maximum size of request queue to skip new requests.">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout59"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-numeric-field id="NF_MaxQueueSize"
+                                                                            type="outline" min="1" max="100" ticks="1"
+                                                                            group-separator="," decimal-separator="."
+                                                                            format-pattern="0"
+                                                                            title="Maximum size of request queue to skip new requests.">
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewQueueSize"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setMaxQueueSize"
+                                                                                path="param/args/size" auto-commit>
+                                                                            </crown-binding>
+                                                                        </davinci-numeric-field>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                            </layout-column>
+                                                        </layout-row>
+                                                    </layout-column>
+                                                    <layout-column id="ColumnLayout38" style="align-items: stretch">
+                                                    </layout-column>
+                                                </layout-row>
+                                            </layout-column>
+                                        </layout-row>
+                                    </davinci-tab>
+                                    <davinci-tab id="Tab_Requests" icon="content/send" title="Requests">
+                                        <layout-row id="RowLayout43">
+                                            <layout-column id="ColumnLayout50" style="align-items: stretch">
+                                                <layout-row id="RowLayout35">
+                                                    <layout-column id="ColumnLayout74"
+                                                        class="myCustomBorderLeft_CSK_Module_MultiHTTPClient"
+                                                        style="align-items: stretch">
+                                                        <layout-row id="RowLayout25">
+                                                            <layout-column id="ColumnLayout7"
+                                                                class="myCustomFrame_CSK_Module_MultiHTTPClient"
+                                                                style="align-items: stretch; flex-grow: 2">
+                                                                <davinci-value-display id="VD_Requests"
+                                                                    class="myCustomFrameLabel_CSK_Module_MultiHTTPClient"
+                                                                    label="Requests" style="align-self: flex-start">
+                                                                </davinci-value-display>
+                                                                <layout-row id="RowLayout9"
+                                                                    style="justify-content: space-between">
+                                                                    <layout-column id="ColumnLayout32"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-drop-down id="DD_RequestMethod"
+                                                                            label="Mode" title="Request method">
+                                                                            <davinci-option id="Option_Get" value="GET"
+                                                                                style="width: 30px">
+                                                                                <span>GET</span>
+                                                                            </davinci-option>
+                                                                            <davinci-option id="Option_Post"
+                                                                                value="POST">
+                                                                                <span>POST</span>
+                                                                            </davinci-option>
+                                                                            <davinci-option id="Option-Head"
+                                                                                value="HEAD">
+                                                                                <span>HEAD</span>
+                                                                            </davinci-option>
+                                                                            <davinci-option id="Option_Put" value="PUT">
+                                                                                <span>PUT</span>
+                                                                            </davinci-option>
+                                                                            <davinci-option id="Option_Patch"
+                                                                                value="PATCH">
+                                                                                <span>PATCH</span>
+                                                                            </davinci-option>
+                                                                            <davinci-option id="Option_Delete"
+                                                                                value="DELETE">
+                                                                                <span>DELETE</span>
+                                                                            </davinci-option>
+                                                                            <davinci-option id="OptionTrace"
+                                                                                value="TRACE">
+                                                                                <span>TRACE</span>
+                                                                            </davinci-option>
+                                                                            <davinci-option id="Option_Options"
+                                                                                value="OPTIONS">
+                                                                                <span>OPTIONS</span>
+                                                                            </davinci-option>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setRequestMode"
+                                                                                path="param/args/mode" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewRequestMode"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-drop-down>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout35"
+                                                                        style="align-items: stretch; flex-grow: 4">
+                                                                        <davinci-text-field id="TF_RequestEndpoint"
+                                                                            type="text" label="Endpoint"
+                                                                            title="Endpoint URL">
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewRequestEndpoint"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setRequestEndpoint"
+                                                                                path="param/args/endpoint" auto-commit>
+                                                                            </crown-binding>
+                                                                        </davinci-text-field>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout36"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-text-field id="TF_RequestPort"
+                                                                            type="text" label="Port"
+                                                                            title="Port for request">
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewRequestPort"
+                                                                                update-on-resume
+                                                                                converter="function(value) {return value.toString();}">
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setRequestPort"
+                                                                                path="param/args/port" auto-commit
+                                                                                converter="function(value) {return Number(value);}">
+                                                                            </crown-binding>
+                                                                        </davinci-text-field>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout37"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-button id="Button_SendRequest"
+                                                                            class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                            type="outline" icon-position="append"
+                                                                            title="Send request" icon="content/send"
+                                                                            style="flex-shrink: 0">
+                                                                            <span></span>
+                                                                            <crown-binding event="submit"
+                                                                                name="CSK_MultiHTTPClient/sendRequestViaUI"
+                                                                                auto-commit>
+                                                                            </crown-binding>
+                                                                        </davinci-button>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout26">
+                                                                    <layout-column id="ColumnLayout42"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-collapse id="Collapse_Header"
+                                                                            collapsed-title="Header"
+                                                                            expanded-title="Hide Header">
+                                                                            <layout-row id="RowLayout27">
+                                                                                <layout-column id="ColumnLayout44"
+                                                                                    style="align-items: stretch">
+                                                                                    <layout-row id="RowLayout28">
+                                                                                        <layout-column
+                                                                                            id="ColumnLayout55"
+                                                                                            style="align-items: stretch">
+                                                                                            <davinci-drop-down
+                                                                                                id="DD_HeaderList"
+                                                                                                label="Header list">
+                                                                                                <crown-edpws-binding
+                                                                                                    property="data"
+                                                                                                    name="CSK_MultiHTTPClient/OnNewHeaderList"
+                                                                                                    update-on-resume
+                                                                                                    converter="convertToList">
+                                                                                                </crown-edpws-binding>
+                                                                                                <crown-edpws-binding
+                                                                                                    property="value"
+                                                                                                    name="CSK_MultiHTTPClient/OnNewSelectedHeader"
+                                                                                                    update-on-resume>
+                                                                                                </crown-edpws-binding>
+                                                                                                <crown-binding
+                                                                                                    event="change"
+                                                                                                    name="CSK_MultiHTTPClient/selectRequestHeaderKey"
+                                                                                                    path="param/args/selection"
+                                                                                                    auto-commit>
+                                                                                                </crown-binding>
+                                                                                            </davinci-drop-down>
+                                                                                        </layout-column>
+                                                                                        <layout-column
+                                                                                            id="ColumnLayout45"
+                                                                                            style="align-items: stretch">
+                                                                                            <davinci-text-field
+                                                                                                id="TF_HeaderKey"
+                                                                                                type="text"
+                                                                                                placeholder="Attribute">
+                                                                                                <crown-binding
+                                                                                                    event="change"
+                                                                                                    name="CSK_MultiHTTPClient/setRequestHeaderKey"
+                                                                                                    path="param/args/key"
+                                                                                                    auto-commit>
+                                                                                                </crown-binding>
+                                                                                                <crown-edpws-binding
+                                                                                                    property="value"
+                                                                                                    name="CSK_MultiHTTPClient/OnNewHeaderKey"
+                                                                                                    update-on-resume>
+                                                                                                </crown-edpws-binding>
+                                                                                            </davinci-text-field>
+                                                                                        </layout-column>
+                                                                                        <layout-column
+                                                                                            id="ColumnLayout46"
+                                                                                            style="align-items: stretch">
+                                                                                            <davinci-text-field
+                                                                                                id="TF__HeaderValue"
+                                                                                                type="text"
+                                                                                                placeholder="Parameter">
+                                                                                                <crown-binding
+                                                                                                    event="change"
+                                                                                                    name="CSK_MultiHTTPClient/setRequestHeaderValue"
+                                                                                                    path="param/args/value"
+                                                                                                    auto-commit>
+                                                                                                </crown-binding>
+                                                                                                <crown-edpws-binding
+                                                                                                    property="value"
+                                                                                                    name="CSK_MultiHTTPClient/OnNewHeaderValue"
+                                                                                                    update-on-resume>
+                                                                                                </crown-edpws-binding>
+                                                                                            </davinci-text-field>
+                                                                                        </layout-column>
+                                                                                        <layout-column
+                                                                                            id="ColumnLayout47"
+                                                                                            style="align-items: stretch">
+                                                                                            <layout-row id="RowLayout50"
+                                                                                                style="justify-content: space-evenly">
+                                                                                                <davinci-button
+                                                                                                    id="Button_AddHeaderAttribute"
+                                                                                                    class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                                                    type="primary"
+                                                                                                    icon-position="append"
+                                                                                                    title="Add header"
+                                                                                                    icon="content/add">
+                                                                                                    <span></span>
+                                                                                                    <crown-binding
+                                                                                                        event="submit"
+                                                                                                        name="CSK_MultiHTTPClient/addHeader"
+                                                                                                        auto-commit>
+                                                                                                    </crown-binding>
+                                                                                                </davinci-button>
+                                                                                                <davinci-button
+                                                                                                    id="Button_DeleteHeader"
+                                                                                                    class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                                                    type="outline"
+                                                                                                    icon-position="append"
+                                                                                                    title="Remove header"
+                                                                                                    icon="action/delete">
+                                                                                                    <span></span>
+                                                                                                    <crown-binding
+                                                                                                        event="submit"
+                                                                                                        name="CSK_MultiHTTPClient/deleteHeader"
+                                                                                                        auto-commit>
+                                                                                                    </crown-binding>
+                                                                                                </davinci-button>
+                                                                                            </layout-row>
+                                                                                        </layout-column>
+                                                                                    </layout-row>
+                                                                                </layout-column>
+                                                                            </layout-row>
+                                                                        </davinci-collapse>
+                                                                        <stacked-view id="SV_ContentActive">
+                                                                            <stacked-pane id="SP_ContentActive"
+                                                                                value="false">
+                                                                                <layout-row id="RowLayout29">
+                                                                                    <layout-column id="ColumnLayout43"
+                                                                                        style="align-items: stretch">
+                                                                                        <davinci-collapse
+                                                                                            id="Collapse_Content"
+                                                                                            collapsed-title="Content"
+                                                                                            expanded-title="Hide Content">
+                                                                                            <layout-row
+                                                                                                id="RowLayout30">
+                                                                                                <layout-column
+                                                                                                    id="ColumnLayout48"
+                                                                                                    style="align-items: stretch">
+                                                                                                    <davinci-text-field
+                                                                                                        id="TF_ContentType"
+                                                                                                        type="text"
+                                                                                                        label="Content type">
+                                                                                                        <crown-edpws-binding
+                                                                                                            property="value"
+                                                                                                            name="CSK_MultiHTTPClient/OnNewRequestContentType"
+                                                                                                            update-on-resume>
+                                                                                                        </crown-edpws-binding>
+                                                                                                        <crown-binding
+                                                                                                            event="change"
+                                                                                                            name="CSK_MultiHTTPClient/setRequestContentType"
+                                                                                                            path="param/args/contentType"
+                                                                                                            auto-commit>
+                                                                                                        </crown-binding>
+                                                                                                    </davinci-text-field>
+                                                                                                    <davinci-text-area
+                                                                                                        id="TA_Content"
+                                                                                                        placeholder="Content"
+                                                                                                        title="e.g. { ' data': { 'variableNameA' : ValueA, 'variableNameB' : ValueB, ... } }"
+                                                                                                        style="height: 200px">
+                                                                                                        <crown-edpws-binding
+                                                                                                            property="value"
+                                                                                                            name="CSK_MultiHTTPClient/OnNewRequestContent"
+                                                                                                            update-on-resume>
+                                                                                                        </crown-edpws-binding>
+                                                                                                        <crown-binding
+                                                                                                            event="change"
+                                                                                                            name="CSK_MultiHTTPClient/setRequestContent"
+                                                                                                            path="param/args/content"
+                                                                                                            auto-commit>
+                                                                                                        </crown-binding>
+                                                                                                    </davinci-text-area>
+                                                                                                    <layout-row
+                                                                                                        id="RowLayout52"
+                                                                                                        class="myCustomSpacerVert10_CSK_Module_MultiHTTPClient"
+                                                                                                        style="flex-grow: 0; flex-shrink: 0">
+                                                                                                    </layout-row>
+                                                                                                </layout-column>
+                                                                                            </layout-row>
+                                                                                        </davinci-collapse>
+                                                                                    </layout-column>
+                                                                                </layout-row>
+                                                                            </stacked-pane>
+                                                                            <stacked-pane id="SP_ContentNotActive"
+                                                                                value="true">
+                                                                            </stacked-pane>
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusRequestContentDisabled"
+                                                                                update-on-resume
+                                                                                converter="function(value) {return value.toString();}">
+                                                                            </crown-edpws-binding>
+                                                                        </stacked-view>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                            </layout-column>
+                                                        </layout-row>
+                                                    </layout-column>
+                                                    <layout-column id="ColumnLayout40" style="align-items: stretch">
+                                                        <layout-row id="RowLayout53">
+                                                            <layout-column id="ColumnLayout54"
+                                                                class="myCustomFrame_CSK_Module_MultiHTTPClient"
+                                                                style="align-items: stretch">
+                                                                <davinci-value-display id="VD_Response"
+                                                                    class="myCustomFrameLabel_CSK_Module_MultiHTTPClient"
+                                                                    value="" label="Response"
+                                                                    style="align-self: flex-start">
+                                                                </davinci-value-display>
+                                                                <layout-row id="RowLayout33">
+                                                                    <layout-column id="ColumnLayout52"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-text-area id="TA_Response" readonly
+                                                                            style="height: 200px">
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewResponseMessage"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-text-area>
+                                                                        <layout-row id="RowLayout12"
+                                                                            style="align-items: center; flex-grow: 0; flex-shrink: 0; justify-content: flex-end">
+                                                                            <davinci-value-display
+                                                                                id="VD_ExtendedResponseInfo"
+                                                                                value="Extended Response Info"
+                                                                                title="Selecte if response should include extended information (e.g. header keys).">
+                                                                            </davinci-value-display>
+                                                                            <davinci-checkbox
+                                                                                id="CB_ExtendedResponseInfo"
+                                                                                title="Selecte if response should include extended information (e.g. header keys).">
+                                                                                <span></span>
+                                                                                <crown-edpws-binding property="checked"
+                                                                                    name="CSK_MultiHTTPClient/OnNewStatusExtendedResponse"
+                                                                                    update-on-resume>
+                                                                                </crown-edpws-binding>
+                                                                                <crown-binding event="change"
+                                                                                    name="CSK_MultiHTTPClient/setExtendedResponse"
+                                                                                    path="param/args/status"
+                                                                                    auto-commit>
+                                                                                </crown-binding>
+                                                                            </davinci-checkbox>
+                                                                        </layout-row>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                            </layout-column>
+                                                        </layout-row>
+                                                    </layout-column>
+                                                </layout-row>
+                                                <layout-row id="RowLayout48"
+                                                    class="myCustomSpacerVert10_CSK_Module_MultiHTTPClient"
+                                                    style="flex-grow: 0; flex-shrink: 0">
+                                                </layout-row>
+                                                <layout-row id="RowLayout34">
+                                                    <layout-column id="ColumnLayout51"
+                                                        class="myCustomFrame_CSK_Module_MultiHTTPClient"
+                                                        style="align-items: stretch">
+                                                        <davinci-value-display id="VD_PreconfiguredRequests"
+                                                            class="myCustomFrameLabel_CSK_Module_MultiHTTPClient"
+                                                            value="" label="Preconfigured Requests"
+                                                            style="align-self: flex-start">
+                                                        </davinci-value-display>
+                                                        <curie-callout id="DC_FlowConfigInfo1" type="info"
+                                                            value="FlowConfig priority active.">
+                                                            <crown-edpws-binding property="hidden"
+                                                                name="CSK_MultiHTTPClient/OnNewStatusFlowConfigPriority"
+                                                                update-on-resume
+                                                                converter="function(value) {return !value;}">
+                                                            </crown-edpws-binding>
+                                                        </curie-callout>
+                                                        <layout-row id="RowLayout13"
+                                                            style="justify-content: space-between; align-items: center">
+                                                            <layout-column id="ColumnLayout28"
+                                                                style="align-items: stretch">
+                                                                <davinci-text-field id="TF_RequestName"
+                                                                    class="myCustomMarginTop2px_CSK_Module_MultiHTTPClient"
+                                                                    type="text" label="Request name"
+                                                                    title="Custom request name">
+                                                                    <crown-edpws-binding property="value"
+                                                                        name="CSK_MultiHTTPClient/OnNewRequestName"
+                                                                        update-on-resume>
+                                                                    </crown-edpws-binding>
+                                                                    <crown-binding event="change"
+                                                                        name="CSK_MultiHTTPClient/setRequestName"
+                                                                        path="param/args/name" auto-commit>
+                                                                    </crown-binding>
+                                                                </davinci-text-field>
+                                                            </layout-column>
+                                                            <layout-column id="ColumnLayout41"
+                                                                style="align-items: stretch">
+                                                                <davinci-text-field id="TF_RegisteredEvent"
+                                                                    class="myCustomMarginTop2px_CSK_Module_MultiHTTPClient"
+                                                                    type="text" label="Registered Event">
+                                                                    <crown-edpws-binding property="value"
+                                                                        name="CSK_MultiHTTPClient/OnNewStatusRegisteredEvent"
+                                                                        update-on-resume>
+                                                                    </crown-edpws-binding>
+                                                                    <crown-binding event="change"
+                                                                        name="CSK_MultiHTTPClient/setRequestRegisteredEvent"
+                                                                        path="param/args/event" auto-commit>
+                                                                    </crown-binding>
+                                                                </davinci-text-field>
+                                                            </layout-column>
+                                                            <layout-column id="ColumnLayout49"
+                                                                style="align-items: stretch">
+                                                                <layout-row id="RowLayout14"
+                                                                    style="align-items: center">
+                                                                    <layout-column id="ColumnLayout31"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-checkbox id="Checkbox_PeriodicRequest"
+                                                                            title="Check to enable periodic request initiation">
+                                                                            <span>Periodic</span>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewRequestPeriodicStatus"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setRequestPeriodicState"
+                                                                                path="param/args/state" auto-commit>
+                                                                            </crown-binding>
+                                                                        </davinci-checkbox>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout30"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-numeric-field id="NF_RequestTimer"
+                                                                            type="outline" min="10" max="3600000"
+                                                                            ticks="1" group-separator=","
+                                                                            decimal-separator="." format-pattern="0"
+                                                                            unit="ms" title="Cycle time">
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewRequestPeriod"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setRequestPeriod"
+                                                                                path="param/args/period" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewRequestPeriodicStatus"
+                                                                                update-on-resume
+                                                                                converter="function(value) {return !value;}">
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-numeric-field>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                            </layout-column>
+                                                            <layout-column id="ColumnLayout26"
+                                                                style="align-items: stretch">
+                                                                <layout-row id="RowLayout18"
+                                                                    style="justify-content: space-between">
+                                                                    <layout-column id="ColumnLayout27"
+                                                                        style="align-items: stretch">
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout53"
+                                                                        style="align-items: stretch">
+                                                                        <layout-row id="RowLayout51"
+                                                                            style="justify-content: space-evenly">
+                                                                            <davinci-button id="Button_AddEditRequest"
+                                                                                class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                                type="primary" icon-position="append"
+                                                                                title="Add request if no request is selected or Edit the selected request"
+                                                                                icon="content/add">
+                                                                                <span></span>
+                                                                                <crown-binding event="submit"
+                                                                                    name="CSK_MultiHTTPClient/addEditRequestViaUI"
+                                                                                    auto-commit>
+                                                                                </crown-binding>
+                                                                                <crown-edpws-binding property="disabled"
+                                                                                    name="CSK_MultiHTTPClient/OnNewStatusFlowConfigPriority"
+                                                                                    update-on-resume>
+                                                                                </crown-edpws-binding>
+                                                                            </davinci-button>
+                                                                            <davinci-button id="Button_RemoveRequest"
+                                                                                class="myCustomButton_CSK_Module_MultiHTTPClient"
+                                                                                type="outline" icon-position="append"
+                                                                                title="Remove request"
+                                                                                icon="action/delete">
+                                                                                <span></span>
+                                                                                <crown-binding event="submit"
+                                                                                    name="CSK_MultiHTTPClient/removeRequest"
+                                                                                    auto-commit>
+                                                                                </crown-binding>
+                                                                                <crown-edpws-binding property="disabled"
+                                                                                    name="CSK_MultiHTTPClient/OnNewStatusFlowConfigPriority"
+                                                                                    update-on-resume>
+                                                                                </crown-edpws-binding>
+                                                                            </davinci-button>
+                                                                        </layout-row>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                            </layout-column>
+                                                        </layout-row>
+                                                        <curie-table id="DT_Requests"
+                                                            title="Table containing all the added requests"
+                                                            style="flex-grow: 1">
+                                                            <curie-table-column id="RequestNo" header="RequestNo"
+                                                                style="flex-grow: 1">
+                                                            </curie-table-column>
+                                                            <curie-table-column id="Name" header="Name"
+                                                                style="flex-grow: 1">
+                                                            </curie-table-column>
+                                                            <curie-table-column id="Mode" header="Mode"
+                                                                style="flex-grow: 1">
+                                                            </curie-table-column>
+                                                            <curie-table-column id="Endpoint" header="Endpoint"
+                                                                style="flex-grow: 1">
+                                                            </curie-table-column>
+                                                            <curie-table-column id="Port" header="Port"
+                                                                style="flex-grow: 1">
+                                                            </curie-table-column>
+                                                            <curie-table-column id="Event" header="Event"
+                                                                style="flex-grow: 1">
+                                                            </curie-table-column>
+                                                            <curie-table-column id="Periodic" header="Periodic">
+                                                            </curie-table-column>
+                                                            <curie-table-column id="Period" header="Period">
+                                                            </curie-table-column>
+                                                            <crown-edpws-binding property="data"
+                                                                name="CSK_MultiHTTPClient/OnNewRequestsTable"
+                                                                update-on-resume>
+                                                            </crown-edpws-binding>
+                                                            <crown-binding event="row-selected"
+                                                                name="CSK_MultiHTTPClient/setSelectedRequestViaUI"
+                                                                path="param/args/jsonRowData" auto-commit>
+                                                            </crown-binding>
+                                                        </curie-table>
+                                                    </layout-column>
+                                                </layout-row>
+                                            </layout-column>
+                                        </layout-row>
+                                    </davinci-tab>
+                                </davinci-tabs>
+                            </layout-column>
+                        </layout-row>
+                    </stacked-pane>
+                    <stacked-pane id="SP_LoginNOK" value="false">
+                        <layout-row id="RowLayout6">
+                            <davinci-callout id="Callout1" type="info">
+                                <span>Please log in via UserManagement module.</span>
+                            </davinci-callout>
+                        </layout-row>
+                    </stacked-pane>
+                    <crown-edpws-binding property="value" name="CSK_MultiHTTPClient/OnUserLevelMaintenanceActive"
+                        update-on-resume converter="function(value) {return value.toString();}">
+                    </crown-edpws-binding>
+                </stacked-view>
+            </stacked-pane>
+            <stacked-pane id="SP_NoSupport" value="false">
+                <layout-row id="RowLayout44">
+                    <layout-column id="ColumnLayout75">
+                        <davinci-callout id="Callout31" type="warning" style="width: 99%">
+                            <span>Module is not supported on this device...</span>
+                        </davinci-callout>
+                        <img id="UI_sample"
+							src="assets/CSK_Module_MultiHTTPClient/UI_sample.png"
+							alt="UI sample">
+                    </layout-column>
+                </layout-row>
+            </stacked-pane>
+            <crown-edpws-binding property="value" name="CSK_MultiHTTPClient/OnNewStatusModuleIsActive" update-on-resume
+                converter="function(value) {return value.toString();}">
+            </crown-edpws-binding>
+        </stacked-view>
+        <stacked-view id="SV_PageCalled">
+            <crown-binding property="value" name="CSK_MultiHTTPClient/pageCalled" path="result/data/empty"
+                auto-update="0" update-on-resume>
+            </crown-binding>
+            <crown-edpws-binding property="value" name="CSK_MultiHTTPClient/OnNewStatusCSKStyle" update-on-resume
+                converter="changeStyle">
+            </crown-edpws-binding>
+        </stacked-view>
+    </layout-column>
 </layout-row>
