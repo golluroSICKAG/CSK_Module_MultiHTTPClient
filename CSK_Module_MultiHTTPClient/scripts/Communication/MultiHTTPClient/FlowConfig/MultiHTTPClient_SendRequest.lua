@@ -13,6 +13,7 @@ local function sendRequest(handle, source)
   local instance = Container.get(handle, 'Instance')
   local requestName = Container.get(handle, 'RequestName')
   local mode = Container.get(handle, 'Mode')
+  local protocol = Container.get(handle, 'Protocol')
   local endpoint = Container.get(handle, 'Endpoint')
   local port = Container.get(handle, 'Port')
 
@@ -25,7 +26,7 @@ local function sendRequest(handle, source)
     else
       CSK_MultiHTTPClient.setSelectedInstance(instance)
 
-      CSK_MultiHTTPClient.addRequest(requestName, mode, endpoint, port, source, false)
+      CSK_MultiHTTPClient.addRequest(requestName, mode, endpoint, port, source, false, nil, protocol)
       break
     end
   end
@@ -37,7 +38,7 @@ Script.serveFunction(BLOCK_NAMESPACE .. '.sendRequest', sendRequest)
 --*************************************************************
 --*************************************************************
 
-local function create(instance, requestName, mode, endpoint, port)
+local function create(instance, requestName, mode, protocol, endpoint, port)
 
   local fullInstanceName = tostring(instance) .. tostring(requestName)
 
@@ -52,6 +53,7 @@ local function create(instance, requestName, mode, endpoint, port)
     Container.add(handle, 'Instance', instance)
     Container.add(handle, 'RequestName', requestName)
     Container.add(handle, 'Mode', mode)
+    Container.add(handle, 'Protocol', protocol)
     Container.add(handle, 'Endpoint', endpoint)
     Container.add(handle, 'Port', port)
     return handle

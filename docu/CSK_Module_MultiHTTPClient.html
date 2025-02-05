@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.12">
 <meta name="author" content="SICK AG">
-<title>Documentation - CSK_Module_MultiHTTPClient 2.0.0</title>
+<title>Documentation - CSK_Module_MultiHTTPClient 2.1.0</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 /* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
@@ -615,11 +615,11 @@ h1,h2,h3,h4,h5,h6{color:#007cc1}
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Documentation - CSK_Module_MultiHTTPClient 2.0.0</h1>
+<h1>Documentation - CSK_Module_MultiHTTPClient 2.1.0</h1>
 <div class="details">
 <span id="author" class="author">SICK AG</span><br>
-<span id="revnumber">version 2.0.0,</span>
-<span id="revdate">2024-10-11</span>
+<span id="revnumber">version 2.1.0,</span>
+<span id="revdate">2025-02-05</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -776,6 +776,7 @@ h1,h2,h3,h4,h5,h6{color:#007cc1}
 </li>
 <li><a href="#_enumerations">Enumerations</a>
 <ul class="sectlevel2">
+<li><a href="#API:Enum:CSK_MultiHTTPClient.Protocol"><span class="api-enum">CSK_MultiHTTPClient.Protocol</span></a></li>
 <li><a href="#API:Enum:CSK_MultiHTTPClient.RequestMode"><span class="api-enum">CSK_MultiHTTPClient.RequestMode</span></a></li>
 </ul>
 </li>
@@ -798,11 +799,11 @@ h1,h2,h3,h4,h5,h6{color:#007cc1}
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Version</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.0</p></td>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Date</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2024-10-11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-02-05</p></td>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock">Author</p></th>
@@ -1345,6 +1346,13 @@ If not used, fill with ''.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">?</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional time of request period in ms.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">protocol</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENUM<br>
+<a href="#API:Enum:CSK_MultiHTTPClient.Protocol">CSK_MultiHTTPClient.Protocol</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">?</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional protocol of request.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1352,7 +1360,7 @@ If not used, fill with ''.</p></td>
 <h6 id="_sample_auto_generated_4">Sample (auto-generated)</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="lua">CSK_MultiHTTPClient.addRequest(name, mode, endpoint, port, event, periodic, period)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="lua">CSK_MultiHTTPClient.addRequest(name, mode, endpoint, port, event, periodic, period, protocol)</code></pre>
 </div>
 </div>
 </div>
@@ -6075,6 +6083,13 @@ Script.register(<span class="string"><span class="delimiter">&quot;</span><span 
 <td class="tableblock halign-left valign-top"><p class="tableblock">Mode of request.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENUM<br>
+<a href="#API:Enum:CSK_MultiHTTPClient.Protocol">CSK_MultiHTTPClient.Protocol</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol of request.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Endpoint</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">STRING</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
@@ -6120,7 +6135,7 @@ Script.register(<span class="string"><span class="delimiter">&quot;</span><span 
 <h6 id="_sample_auto_generated_108">Sample (auto-generated)</h6>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="lua">handle = MultiHTTPClient_FC.SendRequest.create(Instance, RequestName, Mode, Endpoint, Port)</code></pre>
+<pre class="CodeRay highlight"><code data-lang="lua">handle = MultiHTTPClient_FC.SendRequest.create(Instance, RequestName, Mode, Protocol, Endpoint, Port)</code></pre>
 </div>
 </div>
 </div>
@@ -6220,12 +6235,48 @@ Parameter:
 <div class="ulist">
 <ul>
 <li>
+<p><a href="#API:Enum:CSK_MultiHTTPClient.Protocol">CSK_MultiHTTPClient.Protocol</a></p>
+</li>
+<li>
 <p><a href="#API:Enum:CSK_MultiHTTPClient.RequestMode">CSK_MultiHTTPClient.RequestMode</a></p>
 </li>
 </ul>
 </div>
 </dd>
 </dl>
+</div>
+<div class="sect2">
+<h3 id="API:Enum:CSK_MultiHTTPClient.Protocol"><span class="api-enum">CSK_MultiHTTPClient.Protocol</span></h3>
+<div class="paragraph">
+<p>Protocol to use for requests.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Items</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>HTTP</pre></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="literal"><pre>HTTPS</pre></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="API:Enum:CSK_MultiHTTPClient.RequestMode"><span class="api-enum">CSK_MultiHTTPClient.RequestMode</span></h3>
@@ -6295,8 +6346,8 @@ Parameter:
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.0.0<br>
-Last updated 2024-10-11 11:33:25 +0200
+Version 2.1.0<br>
+Last updated 2025-02-05 17:24:29 +0100
 </div>
 </div>
 <script type="text/javascript">

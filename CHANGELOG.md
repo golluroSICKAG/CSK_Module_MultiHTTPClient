@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Release 2.1.0
+
+### New features
+- Protocol (HTTP, HTTPS) selectable within FlowConfig block
+
+### Improvements
+- Do not automatically select new added request within UI table (might confuse user)
+
+### Bugfix
+- Adds multiple 'http://' to endpoint
+
 ## Release 2.0.0
 
 ### New features

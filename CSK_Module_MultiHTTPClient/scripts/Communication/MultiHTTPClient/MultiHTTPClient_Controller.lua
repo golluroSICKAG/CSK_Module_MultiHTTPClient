@@ -739,7 +739,7 @@ local function createRequestParameters()
   return requestParameters
 end
 
-local function addRequest(name, mode, endpoint, port, event, periodic, period)
+local function addRequest(name, mode, endpoint, port, event, periodic, period, protocol)
 
   if name ~= '' then
     if multiHTTPClient_Instances[selectedInstance].parameters.requests[name] then
@@ -747,9 +747,19 @@ local function addRequest(name, mode, endpoint, port, event, periodic, period)
     else
       _G.logger:fine(nameOfModule .. ": Add request to instance" .. tostring(selectedInstance))
 
+      local httpIncluded = string.find(endpoint, 'http') or string.find(endpoint, 'https')
+
       multiHTTPClient_Instances[selectedInstance].requestName = name
       multiHTTPClient_Instances[selectedInstance].requestMode = mode
-      multiHTTPClient_Instances[selectedInstance].requestEndpoint = 'http://' .. endpoint
+      if httpIncluded then
+        multiHTTPClient_Instances[selectedInstance].requestEndpoint = endpoint
+      else
+        if protocol == 'HTTPS' then
+          multiHTTPClient_Instances[selectedInstance].requestEndpoint = 'https://' .. endpoint
+        else
+          multiHTTPClient_Instances[selectedInstance].requestEndpoint = 'http://' .. endpoint
+        end
+      end
       multiHTTPClient_Instances[selectedInstance].requestPort = port
       multiHTTPClient_Instances[selectedInstance].registeredEvent = event or ''
       multiHTTPClient_Instances[selectedInstance].requestPeriodic = periodic
@@ -761,8 +771,10 @@ local function addRequest(name, mode, endpoint, port, event, periodic, period)
       local requestData = helperFuncs.convertTable2Container(multiHTTPClient_Instances[selectedInstance].parameters.requests[multiHTTPClient_Instances[selectedInstance].requestName])
       Script.notifyEvent("MultiHTTPClient_OnNewProcessingParameter", selectedInstance, 'addRequest', requestData)
 
-      multiHTTPClient_Instances[selectedInstance].selectedRequest = multiHTTPClient_Instances[selectedInstance].requestName
-      Script.notifyEvent("MultiHTTPClient_OnNewProcessingParameter", selectedInstance, 'selectedRequest', multiHTTPClient_Instances[selectedInstance].selectedRequest)
+      multiHTTPClient_Instances[selectedInstance].requestName = ''
+      Script.notifyEvent('MultiHTTPClient_OnNewRequestName', multiHTTPClient_Instances[selectedInstance].requestName)
+      Script.notifyEvent('MultiHTTPClient_OnNewRequestsTable', getRequestsTableContent())
+
       --announceExternalEventsAndFunctions() -- future usage
     end
   else
