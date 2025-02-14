@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Improvements
 - Do not automatically select new added request within UI table (might confuse user)
+- Sort preconfigured requests within UI in alphabetic order
 
 ### Bugfix
 - Adds multiple 'http://' to endpoint

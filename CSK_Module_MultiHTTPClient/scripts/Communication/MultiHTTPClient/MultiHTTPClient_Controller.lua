@@ -160,8 +160,15 @@ local function getRequestsTableContent()
     }
     table.insert(tableContent, tableRow)
   else
+    local orderedTable = {}
+    for n in pairs(multiHTTPClient_Instances[selectedInstance].parameters.requests) do
+      table.insert(orderedTable, n)
+    end
+    table.sort(orderedTable)
+
     local id = 1
-    for reqName, requestDescription in pairs(multiHTTPClient_Instances[selectedInstance].parameters.requests) do
+    for _, value in ipairs(orderedTable) do
+      local requestDescription = multiHTTPClient_Instances[selectedInstance].parameters.requests[value]
       local tableRow = {
         RequestNo = tostring(id),
         Name = requestDescription.requestName,
@@ -171,7 +178,7 @@ local function getRequestsTableContent()
         Event = requestDescription.registeredEvent,
         Periodic = requestDescription.requestPeriodic,
         Period = requestDescription.requestPeriod,
-        selected = (multiHTTPClient_Instances[selectedInstance].selectedRequest == reqName)
+        selected = (multiHTTPClient_Instances[selectedInstance].selectedRequest == requestDescription.requestName)
       }
       table.insert(tableContent, tableRow)
       id = id + 1
