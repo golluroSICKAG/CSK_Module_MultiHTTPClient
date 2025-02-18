@@ -47,6 +47,11 @@ The module will dynamically create events to provide the incoming response of th
                 <item name="TRACE">TRACE</item>
                 <item name="OPTIONS">OPTIONS</item>
             </enum>
+            <enum name="Protocol" trait="released">
+                <desc>Protocol to use for requests.</desc>
+                <item desc="HTTP" name="HTTP">HTTP</item>
+                <item desc="HTTPS" name="HTTPS">HTTPS</item>
+            </enum>
             <serves>
                 <event name="OnNewStatusLoadParameterOnReboot">
                     <desc>Notify status if parameters should be loaded on app/device boot up.</desc>
@@ -404,6 +409,7 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                     <param desc="Name of event to get data to send via HTTP request.&#10;If not used, fill with ''." multiplicity="1" name="event" type="string"/>
                     <param desc="Status of request is periodic." multiplicity="1" name="periodic" type="bool"/>
                     <param desc="Optional time of request period in ms." multiplicity="?" name="period" type="int"/>
+                    <param desc="Optional protocol of request." multiplicity="?" name="protocol" ref="CSK_MultiHTTPClient.Protocol" type="enum"/>
                 </function>
                 <function name="sendRequestViaUI">
                     <desc>Function to trigger preconfigured request via UI.</desc>
@@ -508,6 +514,7 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                         <param constraint="1-99" desc="Numeric identifier of processing instance." multiplicity="1" name="Instance" type="int"/>
                         <param desc="Name of request." multiplicity="1" name="RequestName" type="string"/>
                         <param desc="Mode of request." multiplicity="1" name="Mode" ref="CSK_MultiHTTPClient.RequestMode" type="enum"/>
+                        <param desc="Protocol of request." multiplicity="1" name="Protocol" ref="CSK_MultiHTTPClient.Protocol" type="enum"/>
                         <param desc="Endpoint for request WITHOUT leading 'http://'" multiplicity="1" name="Endpoint" type="string"/>
                         <param desc="Port for request." multiplicity="1" name="Port" type="int"/>
                         <return desc="Handle to internally used FlowConfig instance." multiplicity="1" name="handle" type="handle"/>
@@ -523,7 +530,7 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
             </crown>
         </crown>
         <meta key="author">SICK AG</meta>
-        <meta key="version">2.0.0</meta>
+        <meta key="version">2.1.0</meta>
         <meta key="priority">low</meta>
         <meta key="copy-protected">false</meta>
         <meta key="read-protected">false</meta>
