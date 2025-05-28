@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ### New features
 - Basic authentication setup
+- New function 'sendRequest'
 - Check if persistent data to load provides all relevant parameters. Otherwise add default values
 
 ### Improvements
+- 'sendInternalRequest' returns now the HTTP response
 - Minor docu improvements
 
 ### Bugfix
