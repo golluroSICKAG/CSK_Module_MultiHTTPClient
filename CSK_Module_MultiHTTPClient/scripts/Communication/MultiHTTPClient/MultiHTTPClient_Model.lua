@@ -77,45 +77,12 @@ function multiHTTPClient.create(multiHTTPClientInstanceNo)
 
   -- Parameters to be saved permanently if wanted
   self.parameters = {}
-  self.parameters.flowConfigPriority = CSK_FlowConfig ~= nil or false -- Status if FlowConfig should have priority for FlowConfig relevant configurations
-  self.parameters.processingFile = 'CSK_MultiHTTPClient_Processing' -- which file to use for processing (will be started in own thread)
-  self.parameters.clientActivated = false -- Set if HTTP client should be active
-  self.parameters.proxyEnabled = false -- Status if proxy is enabled
-  self.parameters.proxyUsername = '' -- Username for proxy
-  self.parameters.proxyPassword = '' -- Password for proxy
-  self.parameters.proxyURL = '' -- Proxy URL
-  self.parameters.proxyPort = 8080 -- Proxy port
-  self.parameters.hostnameVerification = false -- Status if HTTP client should use hostname verification
-  self.parameters.peerVerification = false -- Status if HTTP client should use peer verification
-  self.parameters.cookieStore = '' -- File where the client’s cookies should be stored stored in 'public/CSK_HTTPClient/'
+  self.parameters = self.helperFuncs.defaultParameters.getParameters() -- Load default parameters
 
-  self.parameters.clientAuthentication = false -- Status if HTTP client authentification is enabled
+  -- Instance specific parameters
   self.parameters.caBundleFileName = 'public/CSK_HTTPClient/CABundle_Instance' .. self.multiHTTPClientInstanceNoString .. '.pem' -- Location of CA bundle file
-  self.parameters.clientCertificateActive = false -- Status if client authentication should be used 
-  self.parameters.clientCertificateType = 'pem' -- Format of client certificate, like 'pem', 'der', 'pkcs#12'
   self.parameters.clientCertificateFileName = 'public/CSK_HTTPClient/ClientCertificate_Instance' .. self.multiHTTPClientInstanceNoString .. '.' -- Location of client certification file
-  self.parameters.clientCertificateKeyType = 'pem' -- Format of client certificate, like 'pem', 'der'
   self.parameters.clientCertificateKeyFileName = 'public/CSK_HTTPClient/ClientCertificateKey_Instance' .. self.multiHTTPClientInstanceNoString .. '.' -- Path to file containing the client’s private key
-  self.parameters.clientCertificateKeyPassphrase = '' -- Optional passphrase for the private key
-
-  self.parameters.extendedResponse = false -- Status if reponse should include extended information like header keys, etc.
-  self.parameters.verboseMode = false -- Status if HTTP client should run in verbose mode
-  self.parameters.queueSize = 5 -- Size of max queue for requests before stopping to execute new requests
-
-  self.parameters.requests = {} -- Table of requests to save
-  --[[ Sample of request parameters:
-  requestParameters = {
-    requestName = ..., -- Name of request
-    requestMode = ..., -- Mode of request
-    requestEndpoint = ..., -- Endpoint URL of request
-    requestPort = ..., -- Port of request
-    requestContent = ..., -- Content of request (body payload)
-    requestContentType = ..., -- Type of content
-    requestPeriodic = ..., -- Status if request should be triggered periodically
-    requestPeriod = ..., -- Cycle time for periodical request
-    headers = {...}, -- Table of header keys + values
-    registeredEvent = ... -- Event to register to execute request (optionally forwarding data of event via request content)
-  }]]
   self.currentDevice = Engine.getTypeName() -- Name of device module is running on
   if self.currentDevice == 'Webdisplay' then
     self.parameters.interface = 'ETH1' -- Interface to use for HTTP client

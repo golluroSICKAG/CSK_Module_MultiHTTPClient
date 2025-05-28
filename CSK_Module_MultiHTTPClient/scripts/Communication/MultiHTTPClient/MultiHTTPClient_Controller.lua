@@ -28,7 +28,7 @@ local json = require('Communication/MultiHTTPClient/helper/Json')
 ----------------------------------------------------------------
 local function emptyFunction()
 end
-Script.serveFunction("CSK_MultiHTTPClient.processInstanceNUM", emptyFunction)
+Script.serveFunction("CSK_MultiHTTPClient.sendRequestNUM", emptyFunction)
 
 Script.serveEvent('CSK_MultiHTTPClient.OnNewResponseNUM', 'MultiHTTPClient_OnNewResponseNUM')
 Script.serveEvent("CSK_MultiHTTPClient.OnNewResponseNUM_NAME", "MultiHTTPClient_OnNewResponseNUM_NAME")
@@ -42,6 +42,10 @@ Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusModuleVersion', 'MultiHTTPClie
 Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusCSKStyle', 'MultiHTTPClient_OnNewStatusCSKStyle')
 Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusModuleIsActive', 'MultiHTTPClient_OnNewStatusModuleIsActive')
 Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusClientActivated', 'MultiHTTPClient_OnNewStatusClientActivated')
+
+Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusBasicAuthentication', 'MultiHTTPClient_OnNewStatusBasicAuthentication')
+Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusBasicAuthenticationUser', 'MultiHTTPClient_OnNewStatusBasicAuthenticationUser')
+
 Script.serveEvent('CSK_MultiHTTPClient.OnNewStatusClientAuthentication', 'MultiHTTPClient_OnNewStatusClientAuthentication')
 
 Script.serveEvent('CSK_MultiHTTPClient.OnNewClientCertificateType', 'MultiHTTPClient_OnNewClientCertificateType')
@@ -296,6 +300,9 @@ local function handleOnExpiredTmrMultiHTTPClient()
     Script.notifyEvent('MultiHTTPClient_OnNewStatusClientActivated', multiHTTPClient_Instances[selectedInstance].parameters.clientActivated)
     Script.notifyEvent('MultiHTTPClient_OnNewStatusClientAuthentication', multiHTTPClient_Instances[selectedInstance].parameters.clientAuthentication)
 
+    Script.notifyEvent('MultiHTTPClient_OnNewStatusBasicAuthentication', multiHTTPClient_Instances[selectedInstance].parameters.basicAuthentication)
+    Script.notifyEvent('MultiHTTPClient_OnNewStatusBasicAuthenticationUser', multiHTTPClient_Instances[selectedInstance].parameters.basicAuthenticationUser)
+
     Script.notifyEvent('MultiHTTPClient_OnNewClientCertificateType', multiHTTPClient_Instances[selectedInstance].parameters.clientCertificateType)
     Script.notifyEvent('MultiHTTPClient_OnNewClientCertificateKeyType', multiHTTPClient_Instances[selectedInstance].parameters.clientCertificateKeyType)
     Script.notifyEvent('MultiHTTPClient_OnNewCookieStore', multiHTTPClient_Instances[selectedInstance].parameters.cookieStore)
@@ -411,10 +418,44 @@ local function setPeerVerification(state)
 end
 Script.serveFunction('CSK_MultiHTTPClient.setPeerVerification', setPeerVerification)
 
+local function setBasicAuthentication(status)
+  if multiHTTPClient_Instances[selectedInstance].parameters.clientActivated == false then
+    _G.logger:fine(nameOfModule .. ": Set 'basicAuthentication' of instance" .. tostring(selectedInstance) .. ' = ' .. tostring(status))
+    multiHTTPClient_Instances[selectedInstance].parameters.basicAuthentication = status
+    Script.notifyEvent('MultiHTTPClient_OnNewStatusBasicAuthentication', status)
+    Script.notifyEvent("MultiHTTPClient_OnNewProcessingParameter", selectedInstance, 'basicAuthentication', status)
+  else
+    _G.logger:fine(nameOfModule .. ": Client currently active. No setup possible.")
+  end
+end
+Script.serveFunction('CSK_MultiHTTPClient.setBasicAuthentication', setBasicAuthentication)
+
+local function setBasicAuthenticationUser(user)
+  if multiHTTPClient_Instances[selectedInstance].parameters.clientActivated == false then
+    _G.logger:fine(nameOfModule .. ": Set 'basicAuthenticationUser' of instance" .. tostring(selectedInstance) .. ' = ' .. tostring(user))
+    multiHTTPClient_Instances[selectedInstance].parameters.basicAuthenticationUser = user
+    Script.notifyEvent("MultiHTTPClient_OnNewProcessingParameter", selectedInstance, 'basicAuthenticationUser', user)
+  else
+    _G.logger:fine(nameOfModule .. ": Client currently active. No setup possible.")
+  end
+end
+Script.serveFunction('CSK_MultiHTTPClient.setBasicAuthenticationUser', setBasicAuthenticationUser)
+
+local function setBasicAuthenticationPassword(password)
+  if multiHTTPClient_Instances[selectedInstance].parameters.clientActivated == false then
+    _G.logger:fine(nameOfModule .. ": Set 'basicAuthenticationPassword' of instance" .. tostring(selectedInstance))
+    multiHTTPClient_Instances[selectedInstance].parameters.basicAuthenticationPassword = password
+    Script.notifyEvent("MultiHTTPClient_OnNewProcessingParameter", selectedInstance, 'basicAuthenticationPassword', password)
+  else
+    _G.logger:fine(nameOfModule .. ": Client currently active. No setup possible.")
+  end
+end
+Script.serveFunction('CSK_MultiHTTPClient.setBasicAuthenticationPassword', setBasicAuthenticationPassword)
+
 local function setClientAuthentication(state)
   if multiHTTPClient_Instances[selectedInstance].parameters.clientActivated == false then
     _G.logger:fine(nameOfModule .. ": Set 'clientAuthentication' of instance" .. tostring(selectedInstance) .. ' = ' .. tostring(state))
-    multiHTTPClient_Instances[selectedInstance].parameters.authenticationEnabled = state
+    multiHTTPClient_Instances[selectedInstance].parameters.clientAuthentication = state
     Script.notifyEvent('MultiHTTPClient_OnNewStatusClientAuthentication', state)
     Script.notifyEvent("MultiHTTPClient_OnNewProcessingParameter", selectedInstance, 'clientAuthentication', state)
   else
@@ -971,6 +1012,8 @@ local function loadParameters()
     if data then
       _G.logger:info(nameOfModule .. ": Loaded parameters for multiHTTPClientObject " .. tostring(selectedInstance) .. " from CSK_PersistentData module.")
       multiHTTPClient_Instances[selectedInstance].parameters = helperFuncs.convertContainer2Table(data)
+
+      multiHTTPClient_Instances[selectedInstance].parameters = helperFuncs.checkParameters(multiHTTPClient_Instances[selectedInstance].parameters, helperFuncs.defaultParameters.getParameters())
 
       -- If something needs to be configured/activated with new loaded data
       Script.notifyEvent('MultiHTTPClient_OnNewProcessingParameter', selectedInstance, 'fullSetup', data)

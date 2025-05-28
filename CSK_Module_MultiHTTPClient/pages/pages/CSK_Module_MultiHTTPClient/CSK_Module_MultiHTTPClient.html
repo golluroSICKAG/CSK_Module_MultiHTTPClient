@@ -7,13 +7,12 @@
         <layout-row id="RowLayout59">
             <layout-column id="ColumnLayout82" style="align-items: stretch">
                 <layout-row id="RowLayout01" style="align-items: baseline">
-                    <davinci-value-display id="V_Title" class="myCustomLabel_CSK_Module_MultiHTTPClient"
-                        value="HTTP Client">
-                    </davinci-value-display>
+                    <h1 id="Heading_Title" class="myCustomLabel_CSK_Module_MultiHTTPClient">
+                        HTTP Client
+                    </h1>
                     <davinci-value-display id="VD_Version">
-                        <crown-edpws-binding property="value" name="CSK_MultiHTTPClient/OnNewStatusModuleVersion"
-                            update-on-resume>
-                        </crown-edpws-binding>
+                        <crown-on property="value" crown-event="CSK_MultiHTTPClient/OnNewStatusModuleVersion">
+                        </crown-on>
                     </davinci-value-display>
                 </layout-row>
             </layout-column>
@@ -60,8 +59,9 @@
                                                             style="justify-content: center; align-items: center">
                                                             <davinci-button id="Button_AddInstance"
                                                                 class="myCustomButton_CSK_Module_MultiHTTPClient"
-                                                                type="outline" icon-position="append"
-                                                                title="Add instance" icon="content/add">
+                                                                type="outline" title="Add instance">
+                                                                <davinci-icon icon="content/add">
+                                                                </davinci-icon>
                                                                 <span></span>
                                                                 <crown-binding event="submit"
                                                                     name="CSK_MultiHTTPClient/addInstance" auto-commit>
@@ -69,9 +69,10 @@
                                                             </davinci-button>
                                                             <davinci-button id="Button_ResetInstances"
                                                                 class="myCustomButton_CSK_Module_MultiHTTPClient"
-                                                                type="outline" icon-position="append"
-                                                                title="Reset instances to one single instance. New setup needs to be saved and restart app to clear old threads."
-                                                                icon="action/delete">
+                                                                type="outline"
+                                                                title="Reset instances to one single instance. New setup needs to be saved and restart app to clear old threads.">
+                                                                <davinci-icon icon="action/delete">
+                                                                </davinci-icon>
                                                                 <span></span>
                                                                 <crown-binding event="submit"
                                                                     name="CSK_MultiHTTPClient/resetInstances"
@@ -124,9 +125,10 @@
                                                                     style="justify-content: center; align-items: center">
                                                                     <davinci-button id="B_LoadConfig"
                                                                         class="myCustomButton_CSK_Module_MultiHTTPClient"
-                                                                        type="outline" icon-position="append"
-                                                                        title="Load configured parameters from CSK_PersistentData module."
-                                                                        icon="action/history">
+                                                                        type="outline"
+                                                                        title="Load configured parameters from CSK_PersistentData module.">
+                                                                        <davinci-icon icon="action/history">
+                                                                        </davinci-icon>
                                                                         <span></span>
                                                                         <crown-binding event="submit"
                                                                             name="CSK_MultiHTTPClient/loadParameters"
@@ -140,9 +142,10 @@
                                                                     </davinci-button>
                                                                     <davinci-button id="B_SaveConfig"
                                                                         class="myCustomButton_CSK_Module_MultiHTTPClient"
-                                                                        type="outline" icon-position="append"
-                                                                        title="Save current configured parameters of this module within CSK_PersistentData module."
-                                                                        icon="content/save">
+                                                                        type="outline"
+                                                                        title="Save current configured parameters of this module within CSK_PersistentData module.">
+                                                                        <davinci-icon icon="content/save">
+                                                                        </davinci-icon>
                                                                         <span></span>
                                                                         <crown-binding event="submit"
                                                                             name="CSK_MultiHTTPClient/sendParameters"
@@ -270,7 +273,8 @@
                                                                     <layout-column id="ColumnLayout24"
                                                                         style="align-items: stretch">
                                                                         <davinci-value-display id="VD_Interface"
-                                                                            value="Interface">
+                                                                            value="Interface"
+                                                                            title="Physical Ethernet interface to be used by the client">
                                                                         </davinci-value-display>
                                                                     </layout-column>
                                                                     <layout-column id="ColumnLayout25"
@@ -304,7 +308,8 @@
                                                                     <layout-column id="ColumnLayout12"
                                                                         style="align-items: stretch">
                                                                         <davinci-value-display id="VD_Active"
-                                                                            value="Client active">
+                                                                            value="Client active"
+                                                                            title="Activate HTTP client instance">
                                                                         </davinci-value-display>
                                                                     </layout-column>
                                                                     <layout-column id="ColumnLayout13"
@@ -326,7 +331,8 @@
                                                                     style="align-items: center">
                                                                     <layout-column id="ColumnLayout9">
                                                                         <davinci-value-display id="VD_VerboseMode"
-                                                                            value="Verbose mode">
+                                                                            value="Verbose mode"
+                                                                            title="Check to enable HTTP client verbose mode">
                                                                         </davinci-value-display>
                                                                     </layout-column>
                                                                     <layout-column id="ColumnLayout34">
@@ -350,12 +356,115 @@
                                                                         </davinci-checkbox>
                                                                     </layout-column>
                                                                 </layout-row>
+                                                                <layout-row id="RowLayout63"
+                                                                    style="align-items: center">
+                                                                    <layout-column id="ColumnLayout89"
+                                                                        style="align-items: stretch">
+                                                                        <davinci-value-display
+                                                                            id="VD_BasicAuthentification"
+                                                                            value="HTTP Basic authentication"
+                                                                            title="Check to enable HTTP basic authentication.">
+                                                                        </davinci-value-display>
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout90">
+                                                                        <davinci-checkbox id="CB_BasicAuthentication"
+                                                                            title="Check to enable HTTP basic authentication."
+                                                                            style="align-self: flex-end">
+                                                                            <span></span>
+                                                                            <crown-edpws-binding property="checked"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusBasicAuthentication"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                            <crown-binding event="change"
+                                                                                name="CSK_MultiHTTPClient/setBasicAuthentication"
+                                                                                path="param/args/status" auto-commit>
+                                                                            </crown-binding>
+                                                                            <crown-edpws-binding property="disabled"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                update-on-resume>
+                                                                            </crown-edpws-binding>
+                                                                        </davinci-checkbox>
+                                                                    </layout-column>
+                                                                </layout-row>
+                                                                <layout-row id="RowLayout64">
+                                                                    <layout-column id="ColumnLayout84"
+                                                                        style="align-items: stretch">
+                                                                    </layout-column>
+                                                                    <layout-column id="ColumnLayout85"
+                                                                        style="align-items: stretch">
+                                                                        <stacked-view id="SV_BasicAuthentication">
+                                                                            <stacked-pane id="SP_BasicAuthentication"
+                                                                                value="true">
+                                                                                <layout-row id="RowLayout65">
+                                                                                    <layout-column id="ColumnLayout86"
+                                                                                        style="align-items: stretch">
+                                                                                        <layout-row id="RowLayout66">
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout87"
+                                                                                                style="align-items: stretch">
+                                                                                                <davinci-text-field
+                                                                                                    id="TF_UserBasicAuthentication"
+                                                                                                    type="text"
+                                                                                                    label="User">
+                                                                                                    <crown-on
+                                                                                                        property="value"
+                                                                                                        crown-event="CSK_MultiHTTPClient/OnNewStatusBasicAuthenticationUser">
+                                                                                                    </crown-on>
+                                                                                                    <crown-binding
+                                                                                                        event="change"
+                                                                                                        name="CSK_MultiHTTPClient/setBasicAuthenticationUser"
+                                                                                                        path="param/args/user"
+                                                                                                        auto-commit>
+                                                                                                    </crown-binding>
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="disabled"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                </davinci-text-field>
+                                                                                            </layout-column>
+                                                                                            <layout-column
+                                                                                                id="ColumnLayout88"
+                                                                                                style="align-items: stretch">
+                                                                                                <davinci-text-field
+                                                                                                    id="TF_PasswordBasicAuthentication"
+                                                                                                    type="password"
+                                                                                                    label="Password">
+                                                                                                    <crown-binding
+                                                                                                        event="change"
+                                                                                                        name="CSK_MultiHTTPClient/setBasicAuthenticationPassword"
+                                                                                                        path="param/args/password"
+                                                                                                        auto-commit>
+                                                                                                    </crown-binding>
+                                                                                                    <crown-edpws-binding
+                                                                                                        property="disabled"
+                                                                                                        name="CSK_MultiHTTPClient/OnNewStatusClientActivated"
+                                                                                                        update-on-resume>
+                                                                                                    </crown-edpws-binding>
+                                                                                                </davinci-text-field>
+                                                                                            </layout-column>
+                                                                                        </layout-row>
+                                                                                    </layout-column>
+                                                                                </layout-row>
+                                                                            </stacked-pane>
+                                                                            <stacked-pane id="SP_NoBasicAuthentication"
+                                                                                value="false">
+                                                                            </stacked-pane>
+                                                                            <crown-edpws-binding property="value"
+                                                                                name="CSK_MultiHTTPClient/OnNewStatusBasicAuthentication"
+                                                                                update-on-resume
+                                                                                converter="function(value) {return value.toString();}">
+                                                                            </crown-edpws-binding>
+                                                                        </stacked-view>
+                                                                    </layout-column>
+                                                                </layout-row>
                                                                 <layout-row id="RowLayout19">
                                                                     <layout-column id="ColumnLayout14"
                                                                         style="align-items: stretch">
                                                                         <davinci-value-display id="VD_ClientAuth"
                                                                             class="myCustomMarginTop16px_CSK_Module_MultiHTTPClient"
-                                                                            value="Client Authentication">
+                                                                            value="Client Authentication"
+                                                                            title="Check to enable client authentication">
                                                                         </davinci-value-display>
                                                                     </layout-column>
                                                                     <layout-column id="ColumnLayout15"
@@ -584,7 +693,7 @@
                                                                         style="align-items: stretch">
                                                                         <davinci-value-display id="VD_Proxy"
                                                                             class="myCustomMarginTop16px_CSK_Module_MultiHTTPClient"
-                                                                            value="Proxy">
+                                                                            value="Proxy" title="Check to enable proxy">
                                                                         </davinci-value-display>
                                                                     </layout-column>
                                                                     <layout-column id="ColumnLayout18"
@@ -719,7 +828,8 @@
                                                                         style="align-items: stretch">
                                                                         <davinci-value-display
                                                                             id="VD_HostnameVerification"
-                                                                            value="Hostname verification">
+                                                                            value="Hostname verification"
+                                                                            title="Check to enable hostname verification">
                                                                         </davinci-value-display>
                                                                     </layout-column>
                                                                     <layout-column id="ColumnLayout23"
@@ -748,7 +858,8 @@
                                                                     <layout-column id="ColumnLayout19"
                                                                         style="align-items: stretch">
                                                                         <davinci-value-display id="VD_PeerVerification"
-                                                                            value="Peer verification">
+                                                                            value="Peer verification"
+                                                                            title="Check to enable peer verification">
                                                                         </davinci-value-display>
                                                                     </layout-column>
                                                                     <layout-column id="ColumnLayout20"
@@ -934,9 +1045,10 @@
                                                                         style="align-items: stretch">
                                                                         <davinci-button id="Button_SendRequest"
                                                                             class="myCustomButton_CSK_Module_MultiHTTPClient"
-                                                                            type="outline" icon-position="append"
-                                                                            title="Send request" icon="content/send"
+                                                                            type="outline" title="Send request"
                                                                             style="flex-shrink: 0">
+                                                                            <davinci-icon icon="content/send">
+                                                                            </davinci-icon>
                                                                             <span></span>
                                                                             <crown-binding event="submit"
                                                                                 name="CSK_MultiHTTPClient/sendRequestViaUI"
@@ -1029,9 +1141,10 @@
                                                                                                     id="Button_AddHeaderAttribute"
                                                                                                     class="myCustomButton_CSK_Module_MultiHTTPClient"
                                                                                                     type="primary"
-                                                                                                    icon-position="append"
-                                                                                                    title="Add header"
-                                                                                                    icon="content/add">
+                                                                                                    title="Add header">
+                                                                                                    <davinci-icon
+                                                                                                        icon="content/add">
+                                                                                                    </davinci-icon>
                                                                                                     <span></span>
                                                                                                     <crown-binding
                                                                                                         event="submit"
@@ -1043,9 +1156,10 @@
                                                                                                     id="Button_DeleteHeader"
                                                                                                     class="myCustomButton_CSK_Module_MultiHTTPClient"
                                                                                                     type="outline"
-                                                                                                    icon-position="append"
-                                                                                                    title="Remove header"
-                                                                                                    icon="action/delete">
+                                                                                                    title="Remove header">
+                                                                                                    <davinci-icon
+                                                                                                        icon="action/delete">
+                                                                                                    </davinci-icon>
                                                                                                     <span></span>
                                                                                                     <crown-binding
                                                                                                         event="submit"
@@ -1290,9 +1404,10 @@
                                                                             style="justify-content: space-evenly">
                                                                             <davinci-button id="Button_AddEditRequest"
                                                                                 class="myCustomButton_CSK_Module_MultiHTTPClient"
-                                                                                type="primary" icon-position="append"
-                                                                                title="Add request if no request is selected or Edit the selected request"
-                                                                                icon="content/add">
+                                                                                type="primary"
+                                                                                title="Add request if no request is selected or Edit the selected request">
+                                                                                <davinci-icon icon="content/add">
+                                                                                </davinci-icon>
                                                                                 <span></span>
                                                                                 <crown-binding event="submit"
                                                                                     name="CSK_MultiHTTPClient/addEditRequestViaUI"
@@ -1305,9 +1420,9 @@
                                                                             </davinci-button>
                                                                             <davinci-button id="Button_RemoveRequest"
                                                                                 class="myCustomButton_CSK_Module_MultiHTTPClient"
-                                                                                type="outline" icon-position="append"
-                                                                                title="Remove request"
-                                                                                icon="action/delete">
+                                                                                type="outline" title="Remove request">
+                                                                                <davinci-icon icon="action/delete">
+                                                                                </davinci-icon>
                                                                                 <span></span>
                                                                                 <crown-binding event="submit"
                                                                                     name="CSK_MultiHTTPClient/removeRequest"

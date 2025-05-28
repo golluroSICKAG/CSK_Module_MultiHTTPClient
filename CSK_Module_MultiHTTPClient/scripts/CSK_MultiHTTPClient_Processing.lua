@@ -32,6 +32,10 @@ processingParams.clientActivated = scriptParams:get('clientActivated')
 processingParams.hostnameVerification = scriptParams:get('hostnameVerification')
 processingParams.peerVerification = scriptParams:get('peerVerification')
 processingParams.cookieStore = scriptParams:get('cookieStore')
+processingParams.basicAuthentication = scriptParams:get('basicAuthentication')
+processingParams.basicAuthenticationUser = scriptParams:get('basicAuthenticationUser')
+processingParams.basicAuthenticationPassword = scriptParams:get('basicAuthenticationPassword')
+
 processingParams.clientAuthentication = scriptParams:get('clientAuthentication')
 processingParams.caBundleFileName = scriptParams:get('caBundleFileName')
 processingParams.clientCertificateType = scriptParams:get('clientCertificateType')
@@ -119,6 +123,11 @@ local function updateClient()
   clientObject = HTTPClient.create()
 
   clientObject:setVerbose(processingParams.verboseMode)
+
+  if processingParams.basicAuthentication then
+    clientObject:setAuthCredentials(processingParams.basicAuthenticationUser, processingParams.basicAuthenticationPassword)
+  end
+
   if processingParams.clientAuthentication then
     if File.exists(processingParams.caBundleFileName) then
       clientObject:setCABundle(processingParams.caBundleFileName)
@@ -179,12 +188,14 @@ end
 
 --- Function to execute a request
 ---@param tempRequestActive bool Status if it is just a temporarly configured request or a preconfigured one
----@param showResponse bool Status if repsonse should be notified as event (e.g. to show it on UI)
----@param eventName string Name of event to notify the response
-local function sendRequest(tempRequestActive, showResponse, eventName)
+---@param showResponse bool Status if response should be notified as event (e.g. to show it on UI)
+---@param eventName string? Optional name of event to notify the response
+---@return string response Response of HTTP request
+local function sendInternalRequest(tempRequestActive, showResponse, eventName)
 
   local timerQueueSize = 0
   local eventQueueSize = 0
+  local jsonResponse = {}
 
   if tempRequestActive then
     updateInternalRequest(processingParams)
@@ -200,37 +211,50 @@ local function sendRequest(tempRequestActive, showResponse, eventName)
 
   if timerQueueSize >= processingParams.queueSize-1 or eventQueueSize >= processingParams.queueSize-1 then
     _G.logger:warning(nameOfModule .. ": Internal request queue too high '(Timer:" .. tostring(timerQueueSize) .. '/Events:' .. tostring(eventQueueSize) .. ")'. Will skip new requests...")
+    return ''
   else
     local tic = DateTime.getTimestamp()
+
     local response = clientObject:execute(request)
     local procTime = DateTime.getTimestamp() - tic
 
     local success = HTTPClient.Response.getSuccess(response)
+    jsonResponse.Success = tostring(success)
     _G.logger:fine(nameOfModule .. ": Response success =  " .. tostring(success))
 
     -- Check response
     local responseMessage = 'After ' .. tostring(procTime) .. 'ms --> ' .. 'Request success = ' .. tostring(success) .. '\n'
-    responseMessage = responseMessage .. 'Code: ' .. HTTPClient.Response.getStatusCode(response) .. '\n'
+    local statusCode = HTTPClient.Response.getStatusCode(response)
+    responseMessage = responseMessage .. 'Code: ' .. statusCode .. '\n'
+    jsonResponse.StatusCode = statusCode
 
     if success then
       -- Check if extended information of the response should be shown
       if processingParams.extendedResponse then
-        responseMessage = responseMessage .. 'Request content type: ' .. HTTPClient.Response.getContentType(response) .. '\n'
+        local contentType = HTTPClient.Response.getContentType(response)
+        responseMessage = responseMessage .. 'Request content type: ' .. contentType .. '\n'
+        jsonResponse.ContentType = contentType
 
         local tempKeys = HTTPClient.Response.getHeaderKeys(response)
+        jsonResponse.Headers = {}
         for _, headerKeys in pairs(tempKeys) do
+          jsonResponse.Headers[headerKeys] = {}
 
           local suc, tempValues = HTTPClient.Response.getHeaderValues(response, headerKeys)
           for _, headerValue in pairs(tempValues) do
             responseMessage = responseMessage .. 'Header-key: ' .. headerKeys .. ' = ' .. headerValue .. '\n'
+            table.insert(jsonResponse.Headers[headerKeys], headerValue)
           end
         end
       end
 
+      jsonResponse.Response = HTTPClient.Response.getContent(response)
       responseMessage = responseMessage .. helperFuncs.jsonLine2Table(HTTPClient.Response.getContent(response)) .. '\n'
     else
       local error = HTTPClient.Response.getError(response)
       local errorDetail = HTTPClient.Response.getErrorDetail(response)
+      jsonResponse.Error = error
+      jsonResponse.ErrorDetail = errorDetail
       responseMessage = responseMessage .. 'Error = ' .. error .. '\n' .. 'Error details = ' .. errorDetail .. '\n'
     end
     if eventName then
@@ -244,8 +268,27 @@ local function sendRequest(tempRequestActive, showResponse, eventName)
         Script.notifyEvent("MultiHTTPClient_OnNewValueToForward" .. multiHTTPClientInstanceNumberString, "MultiHTTPClient_OnNewResponseMessage", responseMessage)
       end
     end
+    return json.encode(jsonResponse)
   end
 end
+
+local function sendRequest(mode, endpoint, port, header, body, contentType)
+  processingParams.extendedResponse = true
+  processingParams.requestMode = mode
+  processingParams.requestEndpoint = endpoint
+  processingParams.requestPort = port
+
+  if body then
+    processingParams.requestContent = body
+  else
+    processingParams.requestContent = ''
+  end
+
+  local response = sendInternalRequest(true, false)
+
+  return response
+end
+Script.serveFunction('CSK_MultiHTTPClient.sendRequest' .. multiHTTPClientInstanceNumberString, sendRequest, 'string, string, int, string:?, string:?, string:?', 'string')
 
 --- Function to set timer if request should be executed periodically
 ---@param requestName string Name of preconfigured request
@@ -260,9 +303,9 @@ local function setTimer(requestName)
       if processingParams.clientActivated then
         setSpecificRequest(requestName)
         if selectedRequest == requestName then
-          sendRequest(false, true, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
+          sendInternalRequest(false, true, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
         else
-          sendRequest(false, false, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
+          sendInternalRequest(false, false, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
         end
       end
     end
@@ -306,9 +349,9 @@ local function setRegisteredEvent(requestName)
         end
         setSpecificRequest(requestName)
         if selectedRequest == requestName then
-          sendRequest(false, true, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
+          sendInternalRequest(false, true, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
         else
-          sendRequest(false, false, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
+          sendInternalRequest(false, false, "MultiHTTPClient_OnNewReponse" .. multiHTTPClientInstanceNumberString .. '_' .. processingParams.requests[requestName].requestName)
         end
       end
     end
@@ -501,7 +544,7 @@ local function handleOnNewProcessingParameter(multiHTTPClientNo, parameter, valu
 
     elseif parameter == 'sendRequest' then
       if processingParams.clientActivated then
-        sendRequest(true, true)
+        sendInternalRequest(true, true)
       end
 
     elseif parameter == 'headerUpdate' then

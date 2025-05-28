@@ -275,6 +275,14 @@ INFO: Other modules can check via "Script.isServedAsEvent" if event of sepecific
                     <desc>Notify if module can be used on device.</desc>
                     <param desc="Status" multiplicity="1" name="status" type="bool"/>
                 </event>
+                <event name="OnNewStatusBasicAuthentication">
+                    <desc>Notify status if HTTP basic authentication should be used.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </event>
+                <event name="OnNewStatusBasicAuthenticationUser">
+                    <desc>Notify user for basic authentication.</desc>
+                    <param desc="Username" multiplicity="1" name="user" type="string"/>
+                </event>
                 <function name="setParameterName">
                     <desc>Function to set the name of the parameters if saved/loaded via the CSK_PersistentData module.</desc>
                     <param desc="Name of the parameter" multiplicity="1" name="name" type="string"/>
@@ -500,6 +508,31 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                 <function name="resetModule">
                     <desc>Function to reset main configuration of module.</desc>
                 </function>
+                <function name="setBasicAuthentication">
+                    <desc>Function to set status to use HTTP basic authentication.</desc>
+                    <param desc="Status" multiplicity="1" name="status" type="bool"/>
+                </function>
+                <function name="setBasicAuthenticationUser">
+                    <desc>Function to set user for HTTP basic authentication.</desc>
+                    <param desc="User" multiplicity="1" name="user" type="string"/>
+                </function>
+                <function name="setBasicAuthenticationPassword">
+                    <desc>Function to set password for user of HTTP basic authentication.</desc>
+                    <param desc="Password" multiplicity="1" name="password" type="string"/>
+                </function>
+                <function name="sendRequestNUM">
+                    <desc>Example of dynamically served function to send a request of a specific instance. +
+NUM will be replaced by the number of instance (e.g. "sendRequest1"). +
+INFO: Other modules can check via "Script.isServedAsFunction" if function of sepecific instance exists. +
+Needs then to be called via "Script.callFunction".</desc>
+                    <param desc="Mode of request." multiplicity="1" name="mode" ref="CSK_MultiHTTPClient.RequestMode" type="enum"/>
+                    <param desc="Endpoint" multiplicity="1" name="endpoint" type="string"/>
+                    <param desc="Port" multiplicity="1" name="port" type="int"/>
+                    <param desc="Optional list of headers (JSON)." multiplicity="?" name="header" type="string"/>
+                    <param desc="Body content (JSON)." multiplicity="?" name="body" type="string"/>
+                    <param desc="Type of content." multiplicity="?" name="contentType" type="string"/>
+                    <return desc="Response (JSON)" multiplicity="1" name="response" type="string"/>
+                </function>
             </serves>
         </crown>
         <crown name="MultiHTTPClient_FC">
@@ -530,7 +563,7 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
             </crown>
         </crown>
         <meta key="author">SICK AG</meta>
-        <meta key="version">2.1.0</meta>
+        <meta key="version">2.2.0</meta>
         <meta key="priority">low</meta>
         <meta key="copy-protected">false</meta>
         <meta key="read-protected">false</meta>
