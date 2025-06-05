@@ -50,10 +50,9 @@ local multiHTTPClient_Instances = {} -- Handle all instances
 local multiHTTPClientController = require('Communication/MultiHTTPClient/MultiHTTPClient_Controller')
 
 if _G.availableAPIs.default and _G.availableAPIs.specific then
-  local setInstanceHandle = require('Communication/MultiHTTPClient/FlowConfig/MultiHTTPClient_FlowConfig')
+  require('Communication/MultiHTTPClient/FlowConfig/MultiHTTPClient_FlowConfig')
   table.insert(multiHTTPClient_Instances, multiHTTPClient_Model.create(1)) -- Create at least 1 instance
   multiHTTPClientController.setMultiHTTPClient_Instances_Handle(multiHTTPClient_Instances) -- share handle of instances
-  setInstanceHandle(multiHTTPClient_Instances)
 else
   _G.logger:warning("CSK_MultiHTTPClient: Relevant CROWN(s) not available on device. Module is not supported...")
 end

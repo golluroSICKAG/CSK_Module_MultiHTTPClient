@@ -959,9 +959,11 @@ Script.serveFunction('CSK_MultiHTTPClient.getStatusModuleActive', getStatusModul
 
 local function clearFlowConfigRelevantConfiguration()
   for i = 1, #multiHTTPClient_Instances do
-    for key, value in pairs(multiHTTPClient_Instances[i].parameters.requests) do
-      setSelectedRequest(key)
-      removeRequest()
+    if multiWebSocketClient_Instances[i].parameters.flowConfigPriority then
+      for key, value in pairs(multiHTTPClient_Instances[i].parameters.requests) do
+        setSelectedRequest(key)
+        removeRequest()
+      end
     end
   end
 end

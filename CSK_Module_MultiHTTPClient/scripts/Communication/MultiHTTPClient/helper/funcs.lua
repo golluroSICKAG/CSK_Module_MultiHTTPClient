@@ -7,6 +7,8 @@
 --**********************Start Global Scope *********************************
 --**************************************************************************
 
+local nameOfModule = 'CSK_MultiHTTPClient'
+
 local funcs = {}
 -- Providing standard JSON functions
 funcs.json = require('Communication/MultiHTTPClient/helper/Json')
@@ -265,9 +267,6 @@ local function checkParameters(content, defaultTable)
     elseif content[key] == nil then
       _G.logger:info(nameOfModule .. ": Missing parameter '" .. tostring(key) .. "'. Adding default value '" .. tostring(defaultTable[key]) .. "'")
       content[key] = defaultTable[key]
-      if key == 'cameraNo' then
-        _G.logger:warning(nameOfModule .. ": '" .. tostring(key) .. "' is a major parameter! Default value might not work and needs to be edited!")
-      end
     end
   end
   return content
